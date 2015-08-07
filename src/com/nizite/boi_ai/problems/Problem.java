@@ -8,16 +8,11 @@ import com.nizite.boi_ai.utils.Parser;
 
 public abstract class Problem {
 	/**
-	 * Basic representation to be used
+	 * Basic representation to be used.
+	 * Add problem definition, define by initial space.
+	 * TODO: check that problem put in rep works well
 	 */
 	protected Representation _representation;
-	
-	/**
-	 * Problem space, defined by initial file.
-	 * Maybe it's a rep with already filled spaces
-	 * TODO: check if really necesary, maybe rep can deal with this on its own
-	 */
-	protected Representation _problem;
 	
 	/**
 	 * Hardcoded soft constraints. Only a list of human readable string
@@ -59,6 +54,9 @@ public abstract class Problem {
 	 */
 	public void config(String rep, String soft, String hard) 
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		this.setSoftConstraints();
+		this.setHardConstraints();
+		this.setObjectiveFunction();
 		this.setImplementedSoft(Parser.stringToIntArray(soft));
 		this.setImplementedHard(Parser.stringToIntArray(hard));
 		
@@ -69,25 +67,74 @@ public abstract class Problem {
 	 * Called by core. Meant to receive a String read from a config file and parse it
 	 * in its important parts (unique to each problem)
 	 * Then calls setup to set the problem and representation instance
-	 * @param config
-	 */
-	public abstract void init(String setup);
-	
-	public abstract Representation getRepresentation();
-	public abstract Representation getProblem();
-	public abstract List<String> getSoftConstraints();
-	public abstract List<String> getHardConstraints();
-	public abstract List<String> getImplementedSoft();
-	public abstract List<String> getImplementedHard();
-	public abstract String getObjectiveFunction();
-	
-	/**
 	 * Saves in the unique variables all info needed.
 	 * Also instantiates Representation with things set up in config and picks softs and hards
 	 * Saves all in variables
 	 * @param config
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	 */
-	protected abstract void setup(Object... config);
+	public abstract void setup(String setup) throws NumberFormatException, Exception;
+	
+	public Representation getRepresentation() {
+		return this._representation;
+	};
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getSoftConstraints() {
+		return this._soft;
+	};
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getHardConstraints() {
+		return this._hard;
+	};
+	
+	public int[] getImplementedSoft() {
+		return this._implementedSoft;
+	}
+	
+	public int[] getImplementedHard() {
+		return this._implementedHard;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getImplementedSoftAsList() {
+		ArrayList<String> implemented = new ArrayList<String>();
+		for(int imp : this._implementedSoft) {
+			implemented.add(this._soft.get(imp));
+		}
+		return implemented;
+	};
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String> getImplementedHardAsList() {
+		ArrayList<String> implemented = new ArrayList<String>();
+		for(int imp : this._implementedHard) {
+			implemented.add(this._soft.get(imp));
+		}
+		return implemented;		
+	};
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getObjectiveFunction() {
+		return this._objectiveFunction;
+	};
 	
 	/**
 	 * TODO :doxs
@@ -103,7 +150,7 @@ public abstract class Problem {
 		this._representation = (Representation) c.newInstance();
 	};
 	
-	protected abstract void setProblem(String problem);
+	protected abstract void setProblem(String problem) throws Exception;
 	
 	/**
 	 * TODO: docs
@@ -137,6 +184,12 @@ public abstract class Problem {
 		this._implementedHard = hard;
 	};
 	
-	protected abstract void setObjectiveFunction();
+	/**
+	 * 
+	 * @param objective
+	 */
+	protected void setObjectiveFunction() {
+		this._objectiveFunction = "";
+	};
 
 }

@@ -1,0 +1,24 @@
+Problems
+-------
+Core -> config
+               -> sets implemented soft, hard, and rep (empty)
+Core -> setup
+               -> setproblem --> instanciate unique problem variables
+                  rep.setStuff      --> fill in rep object with implemented soft, hard, problem
+
+Repres
+--------
+Problem -> setRep -> 
+                     set soft hard and objective -> define the functions for each, should be static
+Problem -> setsoft
+           sethard -> instanciated
+           setproblem -> def of problem
+           set space --> figure out way to show space rep
+           
+Solution
+-----------
+Core -> start up solution
+Core -> config
+Core -> setPRoblem (in solution)
+Core -> run
+Core -> wait for it to finish

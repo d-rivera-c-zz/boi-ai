@@ -36,7 +36,7 @@ public class Parser {
 				ints.add(test);
 			} catch (NumberFormatException e) {
 				// TODO: making this a logger issue
-				System.out.println("Problem parsing");
+				System.out.println("Problem parsing "+number);
 			}
 		}
 

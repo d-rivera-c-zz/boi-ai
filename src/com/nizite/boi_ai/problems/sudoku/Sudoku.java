@@ -1,10 +1,8 @@
 package com.nizite.boi_ai.problems.sudoku;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.nizite.boi_ai.problems.Problem;
-import com.nizite.boi_ai.representations.Representation;
 import com.nizite.boi_ai.utils.Parser;
 
 
@@ -14,71 +12,11 @@ public class Sudoku extends Problem {
 
 
 	@Override
-	public void init(String setup) {
-		String lines[] = setup.split("\\r?\\n");
-		
-		String square = "";
-		for(int i = 2; i < lines.length; i++) {
-			square += lines[i];
-		}
-		
-		this.setup(Parser.stringToInt(lines[0]), square);
-	}
-
-
-	@Override
-	public Representation getRepresentation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Representation getProblem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public List<String> getSoftConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public List<String> getHardConstraints() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public List<String> getImplementedSoft() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public List<String> getImplementedHard() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public String getObjectiveFunction() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	protected void setup(Object... config) {
-		this._size = (int) config[0];
-		this._square = (String) config[1];
+	public void setup(String setup) throws NumberFormatException, Exception {
+		this.setProblem(setup);
+		this._representation.setImplementedSoft(this.getImplementedSoft());
+		this._representation.setImplementedHard(this.getImplementedHard());
+		this._representation.setProblem(this._size, this._square);
 	}
 
 	@Override
@@ -97,9 +35,16 @@ public class Sudoku extends Problem {
 
 
 	@Override
-	protected void setProblem(String problem) {
-		// TODO Auto-generated method stub
+	protected void setProblem(String problem) throws Exception {
+		String lines[] = problem.split("\\r?\\n");
 		
+		String square = "";
+		for(int i = 2; i < lines.length; i++) {
+			square += lines[i];
+		}
+
+		this.setSize(Parser.stringToInt(lines[0]));
+		this.setSquare(square);
 	}
 
 
@@ -129,10 +74,51 @@ public class Sudoku extends Problem {
 
 	@Override
 	protected void setObjectiveFunction() {
-		// TODO Auto-generated method stub
-		
+		super.setObjectiveFunction();
+		this._objectiveFunction = "Minimize hard constrains broken";
+	}
+
+	/* SETTERS */
+
+	/**
+	 * TODO: docs
+	 * @param size
+	 */
+	protected void setSize(int size) {
+		this._size = size;
 	}
 	
+	/**
+	 * Strip ".", replace any non digit with 0 for easier parsing on representations,
+	 * check that length is this._size^2
+	 * @param square
+	 * @return
+	 * @throws Exception 
+	 */
+	protected void setSquare(String square) throws Exception {
+		if(this._size == 0)
+			throw new Exception("Size is not valid");
+		
+		square = square.trim();
+		square = square.replace(".", "");
+
+		// TODO: consider using Math library
+		if(square.length() != (this._size * this._size * this._size * this._size))
+			throw new Exception("Length of square doesn't match size given");
+		
+		String cleanSquare = "";
+		for(char digit : square.toCharArray()) {
+			String cleanDigit = digit + "";
+			try {
+				Parser.stringToInt(cleanDigit);
+				cleanSquare += cleanDigit;
+			} catch (Exception e) {
+				cleanSquare += "0";
+			}
+		}
+		
+		this._square = cleanSquare;
+	}
 	
 	/* GETTERS */
 	public int getSize(){
