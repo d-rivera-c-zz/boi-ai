@@ -35,11 +35,6 @@ public class Core {
 		try {
 			sudoku.config("SquareMatrix", "", "1, 2, 3");
 			sudoku.setup(problem);
-			List<String> constrains = sudoku.getHardConstraints();
-			System.out.println("List of hard constraints to abide to:");
-			for(String constrain : constrains) {
-				System.out.println(constrain);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,7 +50,7 @@ public class Core {
 		algorithm.setup(population, selection, mutation, crossover);
 		algorithm.run();
 		Atom solution = algorithm.getBestSolution();
-		System.out.println(solution.getRepresentation());
+		System.out.println(sudoku.getRepresentation().atomToString(solution));
 		System.out.println(algorithm.getStats());
 		
 		// let solution run until it needs to stop (time, memory, iterations)

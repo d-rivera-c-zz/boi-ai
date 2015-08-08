@@ -1,24 +1,33 @@
 package com.nizite.boi_ai.representations;
 
 /**
- * Every Representation will know how to deal with it's atoms
+ * Every Representation will know how to deal with its atoms
  * It can be a matrix or an object or a list, etc. Pertinent to each Rep
  * @author experiments
  *
  */
-public abstract class Atom {
-	protected Object _atom;
-	protected int    _fitness;
+public class Atom {
+	protected Object  _atom;
+	protected Double _fitness;
 	
-	public int getFitness() {
-		return _fitness;
+	public Atom(Object atom) {
+		this.set(atom);
+		_fitness = null;
 	}
 	
-	public Object getAtom() {
+	public Object get() {
 		return _atom;
 	};
 	
-	public void setAtom(Object atom) {
+	public void set(Object atom) {
 		_atom = atom;
 	};
+	
+	public Double getFitness() {
+		return _fitness;
+	}
+	
+	public void setFitness(double fitness) {
+		_fitness = fitness;
+	}
 }

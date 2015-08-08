@@ -12,6 +12,10 @@ public abstract class Algorithm {
 	protected Representation _representation;
 	protected Atom _bestSolution;
 
+	public void setProblem(Problem problem) {
+		this._problem = problem;
+	}
+	
 	/**
 	 * time in minutes
 	 * @param iterations
@@ -22,9 +26,6 @@ public abstract class Algorithm {
 		this._time = time;
 	};
 	
-	public void setProblem(Problem problem) {
-		this._problem = problem;
-	}
 	public abstract void setup(Object... setup);
 	public abstract void run();
 	public abstract Atom getBestSolution();

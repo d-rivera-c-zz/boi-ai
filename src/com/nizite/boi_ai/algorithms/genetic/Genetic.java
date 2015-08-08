@@ -33,7 +33,7 @@ public class Genetic extends Algorithm {
 	@Override
 	protected void iteration() {
 		for(int i = 0; i < this._populationSize; i++) {
-			int fitness = this._population[i].getFitness();
+			double fitness = this._population[i].getFitness();
 			if (fitness < this._bestSolution.getFitness()) {
 				this._bestSolution = this._population[i];
 			}
@@ -57,7 +57,7 @@ public class Genetic extends Algorithm {
 	public void setup(Object... setup) {
 		this._populationSize = (int) setup[0];
 		this._population = new Atom[this._populationSize];
-		this._bestSolution = this._problem.getRepresentation().createRandom();
+		this._bestSolution = this._problem.getRepresentation().createAtom();
 		this.initialPopulation();
 		this._selection = (double) setup[1];
 		this._mutation = (double) setup[2];
@@ -66,7 +66,7 @@ public class Genetic extends Algorithm {
 	
 	private void initialPopulation() {
 		for (int i = 0; i < this._populationSize; i++) {
-			this._population[i] = this._problem.getRepresentation().createRandom();
+			this._population[i] = this._problem.getRepresentation().createAtom();
 		}
 	}
 
