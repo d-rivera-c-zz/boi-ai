@@ -115,9 +115,43 @@ public abstract class Representation {
 	 */
 	public abstract String dehumanize(String rep) throws Exception;
 	
+	/**
+	 * Implements Rep unique state finding. All sanitization and generic processing are called
+	 * in {@link Representation#getAllowedStates}
+	 * @param avoidSelf
+	 * @return
+	 */
+	protected abstract ArrayList<String> getStates(String avoidSelf);
+	
 	/* *********************** */
 	/*      DEFINED FUNCS      */
 	/* *********************** */
+	
+	
+	/**
+	 * Figures out the "states" a "box" can have.
+	 * For example, for sudoku is numbers from 1 to n^2, for schedulling it's all people/equipment/containers
+	 * that can be allocated in one space
+	 * 
+	 * THINK: allow optional " position"  int/string, could be useful when there's restriction on
+	 * solutions and not all the states are acceptable for a rep
+	 * THINK: allow null as states
+	 * @param avoidSelf if set removes element from the list so it can't be picked again,
+	 *        it will not be enforced if we are left with an empty list after removing self
+	 * @return List<String> with all possible states.
+	 */
+	public ArrayList<String> getAllowedStates(String avoidSelf) {
+		ArrayList<String> states = this.getStates(avoidSelf);
+		
+		if (avoidSelf != null) {
+			while(states.remove(avoidSelf));
+		}
+		if (states.size() == 0) {
+			return this.getAllowedStates(null);
+		}
+
+		return states;
+	}
 
 	/**
 	 * Soft constraints to be enforced, picked by config
@@ -170,10 +204,10 @@ public abstract class Representation {
 		return _problem;
 	}
 	
-	
-	/* PROBLEM SPECIFIC FUNCTIONS */
-	//TODO try to get rid of this
-	public abstract String mutate(String premutation);
-	
+	// finds all the neighbors for a solution
+	// THINK option for pivot? some representations are so large the neighbors number are tons and
+	// they could be restricted by just getting a subset of neig, and if that's so
+	// a point can be made for having an optional pivot to select that "subset"
+	public abstract ArrayList<Atom> neighbors();
 }
 

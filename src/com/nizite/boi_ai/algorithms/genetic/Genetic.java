@@ -140,7 +140,8 @@ public class Genetic extends Algorithm {
 			String mutated = "";
 			for (int j = 0; j < digits.length; j++) {
 				if (rn.nextDouble() <= _mutation && problem[j].equals("")) {
-					mutated += _representation.mutate(digits[j]);
+					ArrayList<String> options = _representation.getAllowedStates(digits[j]);
+					mutated += options.get(rn.nextInt(options.size()));
 				} else {
 					mutated += digits[j];
 				}

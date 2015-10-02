@@ -1,5 +1,6 @@
 package com.nizite.boi_ai.representations.sudoku;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.nizite.boi_ai.representations.Atom;
@@ -266,13 +267,28 @@ public class SquareMatrix extends Representation {
 	}
 
 	@Override
-	public String mutate(String premutation) {
-		Random rn = new Random();
-		int mutation = 1;
-		do {
-			mutation = rn.nextInt(_size*_size) + 1;
-		} while (mutation == Parser.stringToInt(premutation));
+	protected ArrayList<String> getStates(String avoidSelf) {
+		ArrayList<String> states = new ArrayList<String>();
 		
-		return mutation + "";
+		// all numbers from 1 to n^2 are allowed
+		for(int i = 1; i <= _size * _size; i++) {
+			states.add(Integer.toString(i));
+		}
+		
+		if (avoidSelf != null) {
+			while(states.remove(avoidSelf));
+		}
+		if (states.size() == 0) {
+			return this.getAllowedStates(null);
+		}
+
+		return states;
+	}
+
+
+	@Override
+	public ArrayList<Atom> neighbors() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
