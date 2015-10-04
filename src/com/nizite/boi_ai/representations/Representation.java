@@ -58,6 +58,11 @@ public abstract class Representation {
 	public abstract void setProblem(Object... problem) throws Exception;
 	
 	/**
+	 * @see Representation#_objective
+	 */
+	protected abstract void setObjectiveFunction();
+	
+	/**
 	 * Creates a blank representation of an atom
 	 * @return Atom
 	 */
@@ -122,6 +127,18 @@ public abstract class Representation {
 	 * @return
 	 */
 	protected abstract ArrayList<String> getStates(String avoidSelf);
+	
+	/**
+	 * Finds all neighbors of a solution.
+	 * Depending on the movement function and size of the representation, the number of neigh 
+	 * can increment a lot. Use the "pivot" point to select a subset of neigh.
+	 * If no pivot is implemented, a random pivot will be selected to get a subset of neigh.
+	 * Since no enforcement is done on the "random pivot" selection, Reps can change this accordingly
+	 * if it's believed the neigh function will work better that way
+	 * 
+	 * @return
+	 */
+	public abstract ArrayList<Atom> getNeighbors(Atom current);
 	
 	/* *********************** */
 	/*      DEFINED FUNCS      */
@@ -192,22 +209,11 @@ public abstract class Representation {
 	};
 	
 	/**
-	 * @see Representation#_objective
-	 */
-	protected abstract void setObjectiveFunction();
-	
-	/**
 	 * Getter for {@link Representation#_problem}
 	 * @return
 	 */
 	public Atom getProblem() {
 		return _problem;
 	}
-	
-	// finds all the neighbors for a solution
-	// THINK option for pivot? some representations are so large the neighbors number are tons and
-	// they could be restricted by just getting a subset of neig, and if that's so
-	// a point can be made for having an optional pivot to select that "subset"
-	public abstract ArrayList<Atom> neighbors();
 }
 

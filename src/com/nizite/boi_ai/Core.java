@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.algorithms.genetic.Genetic;
+import com.nizite.boi_ai.algorithms.tabu.Tabu;
 import com.nizite.boi_ai.problems.Problem;
 import com.nizite.boi_ai.problems.sudoku.Sudoku;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Representation;
+import com.nizite.boi_ai.representations.sudoku.SquareMatrix;
 
 public class Core {
 
@@ -19,9 +21,10 @@ public class Core {
 		// read problem file and turn on Problem
 		// let solution run until it needs to stop (time, memory, iterations)
 		
-		sudokuEasy();
+		//sudokuEasy();
 		//sudokuMedium();
 		//sudokuHard();
+		sudokuEasyTabu();
 		System.out.println("Finished execution");
 	}
 
@@ -139,6 +142,45 @@ public class Core {
 		algorithm.config(iterations, null);
 		algorithm.setProblem(sudoku);
 		algorithm.setup(population, mutation, crossover);
+		algorithm.run();
+		Atom solution = algorithm.getBestSolution();
+		System.out.println(sudoku.getRepresentation().humanize(solution));
+		System.out.println(solution.getFitness());
+		System.out.println(algorithm.getStats());
+		
+		// let solution run until it needs to stop (time, memory, iterations)
+	}
+	
+	public static void sudokuEasyTabu() {
+		// basic config stuff
+		// setup log
+		// decide what problem and solution to use based on config file
+		// read problem file and turn on Problem
+		String problem = "3\n"
+					   + "\n"
+					   + "--.7--6.-9-\n"
+					   + "6--.3--.5--\n"
+					   + "1-5-7.9--.6-8-3\n"
+					   + "-7-.--.1--8\n"
+					   + "2--.8--4.--9\n"
+					   + "9--3.--.-7-\n"
+					   + "8-1-5.--7.9-3-6\n"
+					   + "--6.--3.--4\n"
+					   + "-3-.1--8.--";
+		Problem sudoku = new Sudoku();
+		try {
+			sudoku.config("SquareMatrix", "", "1, 2, 3");
+			sudoku.setup(problem);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// read config file and turn on solution
+		int iterations = 10000;
+		int tabuSize = 10;
+		Algorithm algorithm = new Tabu();
+		algorithm.config(iterations, null);
+		algorithm.setProblem(sudoku);
+		algorithm.setup(tabuSize);
 		algorithm.run();
 		Atom solution = algorithm.getBestSolution();
 		System.out.println(sudoku.getRepresentation().humanize(solution));

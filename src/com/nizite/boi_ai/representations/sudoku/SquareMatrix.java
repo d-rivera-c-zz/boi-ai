@@ -24,7 +24,18 @@ public class SquareMatrix extends Representation {
 		_problem = this.stringToAtom(this.dehumanize(_square));
 	}
 	
-
+	@Override
+	/**
+	 * There's really no objective function to enforce here 
+	 * other than minimize hard constrains
+	 */
+	protected void setObjectiveFunction() {
+		_objective = (Atom a) -> {
+			double totalScore = Math.pow(_size, 4) * 3;
+			return totalScore;
+		};
+	}
+	
 	@Override
 	public Atom blankAtom() {
 		return new Atom(new Integer[this._size*this._size][this._size*this._size]);
@@ -200,18 +211,6 @@ public class SquareMatrix extends Representation {
 		});
 	}
 
-	@Override
-	/**
-	 * There's really no objective function to enforce here 
-	 * other than minimize hard constrains
-	 */
-	protected void setObjectiveFunction() {
-		_objective = (Atom a) -> {
-			double totalScore = Math.pow(_size, 4) * 3;
-			return totalScore;
-		};
-	}
-
 
 	@Override
 	public String humanize(Atom atom) {
@@ -274,21 +273,55 @@ public class SquareMatrix extends Representation {
 		for(int i = 1; i <= _size * _size; i++) {
 			states.add(Integer.toString(i));
 		}
-		
-		if (avoidSelf != null) {
-			while(states.remove(avoidSelf));
-		}
-		if (states.size() == 0) {
-			return this.getAllowedStates(null);
-		}
 
 		return states;
 	}
 
 
 	@Override
-	public ArrayList<Atom> neighbors() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Pick one random row,
+	 * pivot all numbers of the row,
+	 * don't pivot the ones in the problem
+	 * 
+	 * TODO: We don't worry about the size of the neighbors list?
+	 */
+	public ArrayList<Atom> getNeighbors(Atom current) {
+		ArrayList<Atom> neighbors = new ArrayList<Atom>();
+		
+		Random rn = new Random();
+		int row = rn.nextInt(_size*_size);
+		Integer[][] toPivot = (Integer[][]) current.get();
+		Integer[][] problem = (Integer[][]) _problem.get();
+		
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = i; j < _size*_size; j++) {
+				//copy
+				Integer[][] copy = (Integer[][]) this.blankAtom().get();
+				for(int k=0; k<toPivot.length; k++)
+					  for(int l=0; l<toPivot[k].length; l++)
+					    copy[k][l]=toPivot[k][l];
+
+				int temp = copy[row][i];
+				copy[row][i] = copy[row][j];
+				copy[row][j] = temp;
+				
+				// set all random
+				for (int x = 0; x < this._size*this._size; x++) {
+					for (int y = 0; y < this._size*this._size; y++) {
+						// replace matrix with items on _problem
+						if (problem[x][y] != null && problem[x][y] != 0) {
+							copy[x][y] = problem[x][y];
+						}
+					}
+				}
+				
+				Atom atom = new Atom(copy);
+				atom.setFitness(this.calculateFitness(atom));
+				neighbors.add(atom);
+			}
+		}
+		
+		return neighbors;
 	}
 }
