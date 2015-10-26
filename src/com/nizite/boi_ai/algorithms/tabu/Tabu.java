@@ -23,9 +23,9 @@ public class Tabu extends Algorithm {
 
 	@Override
 	/**
+	 * Update tabu list with current solution as to not use it again
 	 * Find neighbors and select best solution, but remove the solutions already in tabu list.
 	 * If the current solution is better than the best solution, save it.
-	 * Update tabu list with current solution to not use it again
 	 */
 	protected void iteration() {
 		ArrayList<Atom> neighbors = _representation.getNeighbors(_currentSolution);
@@ -54,14 +54,14 @@ public class Tabu extends Algorithm {
 			bestLocalSolution = neighbors.get(0);
 		
 		for (int i = 0; i < neighbors.size(); i++) {
-			// find solution best  = actual solution
-			if (bestLocalSolution.getFitness() < neighbors.get(i).getFitness())
+			// find the best local solutions of neigh list
+			if (bestLocalSolution.getFitness() > neighbors.get(i).getFitness())
 				bestLocalSolution = neighbors.get(i);
 		}
 		_currentSolution = bestLocalSolution;
 		
-		// if actual solution better -> best solution = actual
-		if (_currentSolution.getFitness() > _bestSolution.getFitness())
+		// if current solution is better than the overall solution, update
+		if (_currentSolution.getFitness() < _bestSolution.getFitness())
 			_bestSolution = _currentSolution;
 	}
 }

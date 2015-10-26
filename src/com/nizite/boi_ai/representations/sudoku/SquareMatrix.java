@@ -283,8 +283,6 @@ public class SquareMatrix extends Representation {
 	 * Pick one random row,
 	 * pivot all numbers of the row,
 	 * don't pivot the ones in the problem
-	 * 
-	 * TODO: We don't worry about the size of the neighbors list?
 	 */
 	public ArrayList<Atom> getNeighbors(Atom current) {
 		ArrayList<Atom> neighbors = new ArrayList<Atom>();
@@ -300,13 +298,12 @@ public class SquareMatrix extends Representation {
 				Integer[][] copy = (Integer[][]) this.blankAtom().get();
 				for(int k=0; k<toPivot.length; k++)
 					  for(int l=0; l<toPivot[k].length; l++)
-					    copy[k][l]=toPivot[k][l];
+					    copy[k][l] = toPivot[k][l];
 
 				int temp = copy[row][i];
 				copy[row][i] = copy[row][j];
 				copy[row][j] = temp;
 				
-				// set all random
 				for (int x = 0; x < this._size*this._size; x++) {
 					for (int y = 0; y < this._size*this._size; y++) {
 						// replace matrix with items on _problem
