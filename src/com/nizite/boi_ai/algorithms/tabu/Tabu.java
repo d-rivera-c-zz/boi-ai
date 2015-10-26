@@ -6,7 +6,13 @@ import java.util.LinkedList;
 import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.representations.Atom;
 
-// no dynamic change on long list
+/**
+ * Basic tabu search implementation.
+ * Doesn't change size of tabu list dynamically.
+ * 
+ * @author d-rivera-c
+ * @version 0.1
+ */
 public class Tabu extends Algorithm {
 
 	protected LinkedList<Atom> _tabu;
@@ -30,6 +36,11 @@ public class Tabu extends Algorithm {
 	protected void iteration() {
 		ArrayList<Atom> neighbors = _representation.getNeighbors(_currentSolution);
 		
+		// update tabu
+		_tabu.add(_currentSolution);
+		while (_tabu.size() > _tabuSize)
+			_tabu.removeFirst();
+		
 		// remove tabu list == neighbors
 		for (int i = 0; i < neighbors.size(); i++) {
 			for (int j = 0; j < _tabu.size(); j++) {
@@ -40,11 +51,6 @@ public class Tabu extends Algorithm {
 				}
 			}
 		}
-		
-		// update tabu
-		_tabu.add(_currentSolution);
-		while (_tabu.size() > _tabuSize)
-			_tabu.removeFirst();
 		
 		Atom bestLocalSolution = null;
 		//if no neighbors, explore and create a random atom

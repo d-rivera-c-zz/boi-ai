@@ -8,6 +8,7 @@ import java.util.List;
  * It can be a matrix, list, etc.
  * Handles calculation of fitness and transformation from object representation 
  * to string representation to be used across all problems and solutions
+ * 
  * @author d-rivera-c
  * @version 0.1
  */

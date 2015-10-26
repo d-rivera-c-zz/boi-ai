@@ -7,6 +7,7 @@ import com.nizite.boi_ai.representations.Representation;
 /**
  * Implementation of solutions.
  * Base for each algorithm to implement.
+ * 
  * @author d-rivera-c
  * @version 0.1
  */
