@@ -12,12 +12,6 @@ import com.nizite.boi_ai.representations.Representation;
  */
 public abstract class Algorithm {
 	/**
-	 * Problem object. So far only used to get the rep out of it
-	 * TODO try to get rid of this
-	 */
-	protected Problem _problem;
-	
-	/**
 	 * Number of iterations to run.
 	 * Normally if this is set, the _time variable will not be set
 	 */
@@ -29,7 +23,23 @@ public abstract class Algorithm {
 	 * TODO this
 	 */
 	protected Integer _time;
-	// TODO break after x iterations if best solution remains the same (check if it's sane to do it)
+	
+	/**
+	 * Counts the number of iterations an algorithm is allowed to run on the same point of the search space.
+	 * When an algorithm get stuck in one point of the search space for too long, it's a good idea
+	 * to make incentives to explore other spaces.
+	 * Equal null if not required.
+	 * 
+	 * TODO break after x iterations if best solution remains the same (check if it's sane to do it)
+	 * @todo
+	 */
+	protected Integer _explorationBreakpoint;
+	
+	/**
+	 * Problem object. So far only used to get the rep out of it
+	 * TODO try to get rid of this
+	 */
+	protected Problem _problem;
 	
 	/**
 	 * Representation object. Used to get the Problem Atom and calculate fitness and get Atoms
@@ -63,13 +73,16 @@ public abstract class Algorithm {
 	
 	/**
 	 * Configuration used by all algorithms.
-	 * So far only cares about stop criteria
+	 * If more that one is set (example: time and iterations), then whichever is reached first will be the stop criteria
+	 * @todo So far only cares about stop criteria
 	 * @param iterations
 	 * @param time
+	 * @param explorationBP
 	 */
-	public void config(Integer iterations, Integer time) {
-		this._iterations = iterations;
-		this._time = time;
+	public void config(Integer iterations, Integer time, Integer explorationBP) {
+		_iterations = iterations;
+		_time = time;
+		_explorationBreakpoint = explorationBP;
 	};
 	
 	/**
