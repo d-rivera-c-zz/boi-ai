@@ -3,6 +3,7 @@ package com.nizite.boi_ai.representations.sudoku;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.nizite.boi_ai.Config;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Lambda;
 import com.nizite.boi_ai.representations.Representation;
@@ -80,9 +81,9 @@ public class SquareRandom extends Representation {
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = 0; j < _size*_size; j++) {
 				if (rep[i][j] != null) {
-					representation += Integer.toString(rep[i][j]) + "-";
+					representation += Integer.toString(rep[i][j]) + Config.ATOM_SPLIT_CHAR;
 				} else {
-					representation += "-";
+					representation += Config.ATOM_SPLIT_CHAR;
 				}
 			}
 		}
@@ -103,7 +104,7 @@ public class SquareRandom extends Representation {
 	public Atom stringToAtom(String rep) {
 		Integer[][] representation = (Integer[][]) this.blankAtom().get();
 		
-		String[] numbers = rep.split("-");
+		String[] numbers = rep.split(Config.ATOM_SPLIT_CHAR);
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = 0; j < _size*_size; j++) {
 				try {
@@ -264,7 +265,7 @@ public class SquareRandom extends Representation {
 					atom += digit;
 				} catch (Exception e) {}
 				
-				atom += "-";
+				atom += Config.ATOM_SPLIT_CHAR;
 			}
 		}
 		atom = atom.substring(0, atom.length()-1);
