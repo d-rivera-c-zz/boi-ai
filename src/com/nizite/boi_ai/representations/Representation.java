@@ -16,7 +16,7 @@ public abstract class Representation {
 	/**
 	 * Representation of the problem
 	 * Used to persist hardcoded restrictions
-	 * Problem is set within the rep ti avoid mixing Problem and Rep all the time
+	 * Problem is set within the rep to avoid mixing Problem and Rep all the time
 	 * Since the definition of the Problem depends on the Rep, it makes sense to store it as an Atom
 	 */
 	protected Atom _problem;

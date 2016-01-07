@@ -1,7 +1,5 @@
 package com.nizite.boi_ai;
 
-import java.io.IOException;
-
 import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.algorithms.genetic.Genetic;
 import com.nizite.boi_ai.algorithms.tabu.Tabu;
@@ -20,12 +18,11 @@ public class Core {
 		// read problem file and turn on Problem
 		// let solution run until it needs to stop (time, memory, iterations)
 		
-
 		sudoku();
 		//sudokuTabu();
 		
 		// let solution run until it needs to stop (time, memory, iterations)
-
+		
 		System.out.println("Finished execution");
 	}
 
@@ -54,20 +51,18 @@ public class Core {
 	}
 
 	
-	public static void sudokuTabu() throws IOException {
+	public static void sudokuTabu() throws NumberFormatException, Exception {
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
 		String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9hard.txt"); //hard
 		Problem sudoku = new Sudoku();
-		try {
-			sudoku.config("SquareValidRows", "", "1, 2, 3");
-			sudoku.setup(problem);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		sudoku.config("SquareValidRows", "", "1, 2, 3");
+		sudoku.setup(problem);
+
 		// read config file and turn on solution
-		int iterations = 100000;
-		int tabuSize = 40;
+		int iterations = 10000;
+		int tabuSize = 10;
 		Algorithm algorithm = new Tabu();
 		algorithm.config(iterations, null, null);
 		algorithm.setProblem(sudoku);
@@ -77,7 +72,5 @@ public class Core {
 		System.out.println(sudoku.getRepresentation().humanize(solution));
 		System.out.println(solution.getFitness());
 		System.out.println(algorithm.getStats());
-		
-		// let solution run until it needs to stop (time, memory, iterations)
 	}
 }

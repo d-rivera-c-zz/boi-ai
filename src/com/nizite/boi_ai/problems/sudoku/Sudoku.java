@@ -6,12 +6,22 @@ import com.nizite.boi_ai.problems.Problem;
 import com.nizite.boi_ai.utils.Parser;
 
 /**
- * Simple sudoku problem (not NP-complete) to demonstrate advantages of boi-ai.
+ * Simple sudoku problem.
+ * Rules are the same as basic sudoku, but size can be bigger than 9 squares.
+ * 
  * @author d-rivera-c
  * @version 0.1
  */
 public class Sudoku extends Problem {
+	/**
+	 * Core size of the squares. If the board is divided first into 3 big squares per row,
+	 * then _size is 3
+	 */
 	private int    _size;
+	
+	/**
+	 * Initial set of filled in number boxes to start with. It can be an empty board too.
+	 */
 	private String _square;
 
 	/* *********************** */
@@ -115,29 +125,7 @@ public class Sudoku extends Problem {
 	protected void setSquare(String square) throws Exception {
 		if(this._size == 0)
 			throw new Exception("Size is not valid");
-		// TODO: check for the need of this
-		
-		
-		
-//		square = square.trim();
-//		square = square.replace(".", "");
-//
-//		// TODO: consider using Math library
-//		if(square.length() != (this._size * this._size * this._size * this._size))
-//			throw new Exception("Length of square doesn't match size given");
-//		
-//		String cleanSquare = "";
-//		for(char digit : square.toCharArray()) {
-//			String cleanDigit = digit + "";
-//			try {
-//				Parser.stringToInt(cleanDigit);
-//				cleanSquare += cleanDigit;
-//			} catch (Exception e) {
-//				cleanSquare += "0";
-//			}
-//		}
-		
-		//this._square = cleanSquare;
+
 		_square = square;
 	}
 	

@@ -62,13 +62,12 @@ public abstract class Problem {
 	/* *********************** */
 	
 	/**
-	 * Called by core. Meant to receive a String read from a config file and parse it
-	 * in its important parts (unique to each problem)
-	 * Then calls setup to set the problem and representation instance
+	 * Receives a String read from a config file and parses it
+	 * in its important parts (unique to each problem).
 	 * Saves in the unique variables all info needed.
-	 * Also instantiates Representation with things set up in config and picks softs and hards
-	 * Saves all in variables
-	 * @param config
+	 * Also instantiates Representation with things set up in config and picks SC and HC
+	 * 
+	 * @param setup
 	 * @throws Exception 
 	 * @throws NumberFormatException 
 	 */
@@ -81,7 +80,8 @@ public abstract class Problem {
 	 * Sets problem specific variables.
 	 * Should be used to parse a String defining the whole problem and divide it into different
 	 * variables.
-	 * Called by {@link Problem#setup(String)}
+	 * Should be called by {@link Problem#setup(String)}
+	 * 
 	 * @param problem String that defines the problem
 	 * @throws Exception
 	 */
@@ -94,7 +94,8 @@ public abstract class Problem {
 	
 	/**
 	 * Sets what representation is going to be used and how many soft & hard constraints
-	 * to be aware of. Mainly to be passed to Representation instance
+	 * to be aware of. Mainly to be passed to Representation instance.
+	 * 
 	 * @param rep
 	 * @param soft
 	 * @param hard
@@ -118,11 +119,10 @@ public abstract class Problem {
 	 * TODO: doesn't make sure class actually exists
 	 * TODO: check the exception thrown and reduce/compress them
 	 * 
-	 * Creates a new Representation object, 
-	 * with the subclass detailed in {@link Problem#config(String, String, String)}.
+	 * Creates a new Representation object, with the subclass detailed in {@link Problem#config(String, String, String)}.
 	 * The representation is stored in {@link Problem#_representation}
-	 * @param rep name of the {@link Representation} class to use
 	 * 
+	 * @param rep name of the {@link Representation} class to use
 	 * @throws ClassNotFoundException
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
