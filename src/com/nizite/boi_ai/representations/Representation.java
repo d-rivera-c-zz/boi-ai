@@ -8,6 +8,7 @@ import java.util.List;
  * It can be a matrix, list, etc.
  * Handles calculation of fitness and transformation from object representation 
  * to string representation to be used across all problems and solutions
+ * 
  * @author d-rivera-c
  * @version 0.1
  */
@@ -134,7 +135,9 @@ public abstract class Representation {
 	 * can increment a lot. Use the "pivot" point to select a subset of neigh.
 	 * If no pivot is implemented, a random pivot will be selected to get a subset of neigh.
 	 * Since no enforcement is done on the "random pivot" selection, Reps can change this accordingly
-	 * if it's believed the neigh function will work better that way
+	 * if it's believed the neigh function will work better that way.
+	 * We don't worry about the size of the neigh list, if it becomes a problem, the class 
+	 * implementing it should do something about it.
 	 * 
 	 * @return
 	 */

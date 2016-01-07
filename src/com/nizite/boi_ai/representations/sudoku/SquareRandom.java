@@ -9,13 +9,16 @@ import com.nizite.boi_ai.representations.Representation;
 import com.nizite.boi_ai.utils.Parser;
 
 /**
+ * Square n x n matrix
+ * Random numbers (< n^2) in every empty space.
+ * Depends on penalizations to enforce constrains.
  * 
- * @author experiments
- *
+ * @author d-rivera-c
+ * @version 0.1
  */
-public class SquareMatrix extends Representation {
-	private int _size;
-	private String _square;
+public class SquareRandom extends Representation {
+	protected int _size;
+	protected String _square;
 
 	@Override
 	public void setProblem(Object... problem) throws Exception {
@@ -283,8 +286,6 @@ public class SquareMatrix extends Representation {
 	 * Pick one random row,
 	 * pivot all numbers of the row,
 	 * don't pivot the ones in the problem
-	 * 
-	 * TODO: We don't worry about the size of the neighbors list?
 	 */
 	public ArrayList<Atom> getNeighbors(Atom current) {
 		ArrayList<Atom> neighbors = new ArrayList<Atom>();
@@ -293,23 +294,26 @@ public class SquareMatrix extends Representation {
 		int row = rn.nextInt(_size*_size);
 		Integer[][] toPivot = (Integer[][]) current.get();
 		Integer[][] problem = (Integer[][]) _problem.get();
-		
+
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = i; j < _size*_size; j++) {
+				// if [i][j] has number, don't move it
+				if (problem[row][i] != null || problem[row][j] != null)
+					continue;
+				
 				//copy
 				Integer[][] copy = (Integer[][]) this.blankAtom().get();
-				for(int k=0; k<toPivot.length; k++)
-					  for(int l=0; l<toPivot[k].length; l++)
-					    copy[k][l]=toPivot[k][l];
+				for(int k = 0; k < toPivot.length; k++)
+					  for(int l = 0; l < toPivot[k].length; l++)
+					    copy[k][l] = toPivot[k][l];
 
 				int temp = copy[row][i];
 				copy[row][i] = copy[row][j];
 				copy[row][j] = temp;
 				
-				// set all random
+				// replace matrix with items on _problem
 				for (int x = 0; x < this._size*this._size; x++) {
 					for (int y = 0; y < this._size*this._size; y++) {
-						// replace matrix with items on _problem
 						if (problem[x][y] != null && problem[x][y] != 0) {
 							copy[x][y] = problem[x][y];
 						}
