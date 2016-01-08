@@ -122,9 +122,9 @@ public class SquareRandom extends Representation {
 
 	@Override
 	public double calculateFitness(Atom atom) {
-		double totalScore = _objective.calc(atom);
-		for(Lambda constrain : _hard) {
-			totalScore -= constrain.calc(atom);
+		double totalScore = 0.0;
+		for(Lambda constraint : _hard) {
+			totalScore += constraint.calc(atom);
 		}
 		
 		return totalScore;

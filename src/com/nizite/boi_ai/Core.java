@@ -28,17 +28,18 @@ public class Core {
 
 	public static void sudoku() throws NumberFormatException, Exception {	
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
-		String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
+		//String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9hard.txt"); //hard
+		String problem = FileReader.toString("examples/problems/sudoku/25x25medium.txt");
 		Problem sudoku = new Sudoku();
 		sudoku.config("SquareRandom", "", "1, 2, 3");
 		sudoku.setup(problem);
 
 		// read config file and turn on solution
-		int iterations = 100000;
+		int iterations = 50000;
 		int population = 20;
-		double mutation = 0.2;
-		double crossover = 0.8;
+		double mutation = 0.4;
+		double crossover = 0.2;
 		Algorithm algorithm = new Genetic();
 		algorithm.config(iterations, null, null);
 		algorithm.setProblem(sudoku);
@@ -53,16 +54,17 @@ public class Core {
 	
 	public static void sudokuTabu() throws NumberFormatException, Exception {
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
-		String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
+		//String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9hard.txt"); //hard
+		String problem = FileReader.toString("examples/problems/sudoku/25x25medium.txt"); // freaking hard
 		Problem sudoku = new Sudoku();
 
 		sudoku.config("SquareValidRows", "", "1, 2, 3");
 		sudoku.setup(problem);
 
 		// read config file and turn on solution
-		int iterations = 10000;
-		int tabuSize = 10;
+		int iterations = 1000;
+		int tabuSize = 20;
 		Algorithm algorithm = new Tabu();
 		algorithm.config(iterations, null, null);
 		algorithm.setProblem(sudoku);
