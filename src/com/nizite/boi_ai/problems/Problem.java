@@ -23,18 +23,13 @@ public abstract class Problem {
 	protected Representation _representation;
 	
 	/**
-	 * Hardcoded soft constraints. 
+	 * Hardcoded constraints.
+	 * Since soft/hard constraints can change depending on what is being analyzed, 
+	 * all constraints are put on the same list, and on program run can be selected.
 	 * Only a list of human readable string, real work of calculation
 	 * will be done by {@link Representation#calculateFitness(com.nizite.boi_ai.representations.Atom)}
 	 */
-	protected List<String> _soft;
-	
-	/**
-	 * Hardcoded hard constraints. 
-	 * Only a list of human readable string, real work of calculation 
-	 * will be done by {@link Representation#calculateFitness(com.nizite.boi_ai.representations.Atom)
-	 */
-	protected List<String> _hard;
+	protected List<String> _constraints;
 	
 	/**
 	 * Soft constraints to be enforced.
@@ -105,13 +100,12 @@ public abstract class Problem {
 	 */
 	public void config(String rep, String soft, String hard) 
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		this.setSoftConstraints();
-		this.setHardConstraints();
+		this.setConstraints();
 		this.setObjectiveFunction();
-		this.setImplementedSoft(Parser.stringToIntArray(soft));
-		this.setImplementedHard(Parser.stringToIntArray(hard));
 		
 		this.setRepresentation(rep);
+		_representation.setImplementedSoft(Parser.stringToIntArray(soft));
+		_representation.setImplementedHard(Parser.stringToIntArray(hard));
 	};	
 	
 
@@ -132,44 +126,14 @@ public abstract class Problem {
 		Class<?> c = Class.forName(rep);
 		this._representation = (Representation) c.newInstance();
 	};
+	
+	/**
+	 * Initialized {@link Problem#_constraints} as an empty list
+	 */
+	protected void setConstraints() {
+		_constraints = new ArrayList<String>();
+	}
 
-	
-	/**
-	 * Initializes {@link Problem#_soft} as an empty list
-	 */
-	protected void setSoftConstraints() {
-		this._soft = new ArrayList<String>();
-	};
-	
-	/**
-	 * Initializes {@link Problem#_hard} as an empty list
-	 */
-	protected void setHardConstraints() {
-		this._hard = new ArrayList<String>();
-	};
-	
-	/**
-	 * TODO: check that the numbers are within the _soft array keys
-	 * 
-	 * Initializes {@link Problem#_implementedSoft} with an array
-	 * 
-	 * @param soft array of constraints to implement
-	 */
-	protected void setImplementedSoft(int[] soft) {
-		this._implementedSoft = soft;
-	};
-	
-	/**
-	 * TODO check that all the numbers in array are within the _hard keys
-	 * 
-	 * Initializes {@link Problem#_implementedHard} with an array
-	 * 
-	 * @param hard array of constraints to implement
-	 */
-	protected void setImplementedHard(int[] hard) {
-		this._implementedHard = hard;
-	};
-	
 	/**
 	 * Initializes text-only objective function as empty string
 	 */
@@ -183,60 +147,13 @@ public abstract class Problem {
 	public Representation getRepresentation() {
 		return this._representation;
 	};
-
-	/**
-	 * @see Problem#_soft
-	 */
-	public List<String> getSoftConstraints() {
-		return this._soft;
-	};
 	
 	/**
-	 * @see Problem#_hard
+	 * @see Problem#_constraints
 	 */
-	public List<String> getHardConstraints() {
-		return this._hard;
-	};
-	
-	/**
-	 * @see Problem#_implementedSoft
-	 */
-	public int[] getImplementedSoft() {
-		return this._implementedSoft;
+	public List<String> getConstraints() {
+		return _constraints;
 	}
-	
-	/**
-	 * @see Problem#_implementedHard
-	 */
-	public int[] getImplementedHard() {
-		return this._implementedHard;
-	}
-	
-	/**
-	 * Gets implemented soft constrains selected as a text-readable list
-	 * @see Problem#_soft
-	 * @return ArrayList<String> text of implemented soft constrains
-	 */
-	public List<String> getImplementedSoftAsList() {
-		ArrayList<String> implemented = new ArrayList<String>();
-		for(int imp : this._implementedSoft) {
-			implemented.add(this._soft.get(imp));
-		}
-		return implemented;
-	};
-	
-	/**
-	 * Gets implemented hard constrains selected as a text-readable list
-	 * @see Problem#_hard
-	 * @return ArrayList<String> text of implemented hard constrains
-	 */
-	public List<String> getImplementedHardAsList() {
-		ArrayList<String> implemented = new ArrayList<String>();
-		for(int imp : this._implementedHard) {
-			implemented.add(this._soft.get(imp));
-		}
-		return implemented;		
-	};
 	
 	/**
 	 * @see Problem#_objectiveFunction

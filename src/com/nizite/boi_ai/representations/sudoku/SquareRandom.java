@@ -25,7 +25,7 @@ public class SquareRandom extends Representation {
 	public void setProblem(Object... problem) throws Exception {
 		_size = (int) problem[0];
 		_square = (String) problem[1];
-		_problem = this.stringToAtom(this.dehumanize(_square));
+		_problem = this.dehumanize(_square);
 	}
 	
 	@Override
@@ -134,11 +134,11 @@ public class SquareRandom extends Representation {
 	 * TODO: filter by array
 	 */
 	@Override
-	protected void setHardConstraints(int[] hard) {
-		super.setHardConstraints(hard);
+	protected void setConstraints() {
+		super.setConstraints();
 
 		// Each row must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -161,7 +161,7 @@ public class SquareRandom extends Representation {
 		});
 		
 		// Each column must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -184,7 +184,7 @@ public class SquareRandom extends Representation {
 		});
 		
 		// Each n x n square must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -248,7 +248,7 @@ public class SquareRandom extends Representation {
 	}
 
 	@Override
-	public String dehumanize(String rep) throws Exception {
+	public Atom dehumanize(String rep) throws Exception {
 		String atom = "";
 		String lines[] = rep.split("\\r?\\n");
 		
@@ -270,7 +270,8 @@ public class SquareRandom extends Representation {
 		}
 		atom = atom.substring(0, atom.length()-1);
 
-		return atom;
+		Atom atomObject = this.stringToAtom(atom);
+		return atomObject;
 	}
 
 	@Override

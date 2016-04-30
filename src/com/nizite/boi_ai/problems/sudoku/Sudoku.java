@@ -1,7 +1,5 @@
 package com.nizite.boi_ai.problems.sudoku;
 
-import java.util.ArrayList;
-
 import com.nizite.boi_ai.problems.Problem;
 import com.nizite.boi_ai.utils.Parser;
 
@@ -35,8 +33,6 @@ public class Sudoku extends Problem {
 	 */
 	public void setup(String setup) throws NumberFormatException, Exception {
 		this.setProblem(setup);
-		this._representation.setImplementedSoft(this.getImplementedSoft());
-		this._representation.setImplementedHard(this.getImplementedHard());
 		this._representation.setProblem(this._size, this._square);
 	}
 	
@@ -72,28 +68,17 @@ public class Sudoku extends Problem {
 		super.setRepresentation(rep);
 	}
 
-
-	@Override
-	/**
-	 * Sudoku problem doesn't have soft constraints,
-	 * all constraints need to be fulfilled
-	 */
-	protected void setSoftConstraints() {
-		this._soft = new ArrayList<String>();
-	}
-
-
 	@Override
 	/**
 	 * All sudoku constraints are hard.
 	 * If not all are enforced (@link #setImplementedHard(int[] hard)
 	 * the solution will not be what's expected for the problem
 	 */
-	protected void setHardConstraints() {
-		super.setHardConstraints();
-		this._hard.add("Each row must have all numbers 1-n^2");
-		this._hard.add("Each column must have all numbers 1-n^2");
-		this._hard.add("Each n x n square must have all numbers 1-n^2");
+	protected void setConstraints() {
+		super.setConstraints();
+		this._constraints.add("Each row must have all numbers 1-n^2");
+		this._constraints.add("Each column must have all numbers 1-n^2");
+		this._constraints.add("Each n x n square must have all numbers 1-n^2");
 	}
 
 

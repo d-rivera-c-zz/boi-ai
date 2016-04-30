@@ -3,6 +3,8 @@ package com.nizite.boi_ai.representations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nizite.boi_ai.problems.Problem;
+
 /**
  * Representation of a problem.
  * It can be a matrix, list, etc.
@@ -20,6 +22,13 @@ public abstract class Representation {
 	 * Since the definition of the Problem depends on the Rep, it makes sense to store it as an Atom
 	 */
 	protected Atom _problem;
+	
+	/**
+	 * List of all functions to determine if a constraint was broken or not.
+	 * The constraints to be implemented are determined by 
+	 * {@link Representation#_hard} and {@link Representation#_soft}
+	 */
+	protected List<Lambda> _constraints;
 	
 	/**
 	 * List of functions associated with hard constrains
@@ -45,6 +54,7 @@ public abstract class Representation {
 	 */
 	public Representation() {
 		this.setObjectiveFunction();
+		this.setConstraints();
 	}
 	
 	/* *********************** */
@@ -116,10 +126,10 @@ public abstract class Representation {
 	 * Normally the first setup of the problem (passed here by {@link Core} 
 	 * will be written in a "humanized" string and will need to be parsed by this function
 	 * @param rep String
-	 * @return String
+	 * @return Atom
 	 * @throws Exception
 	 */
-	public abstract String dehumanize(String rep) throws Exception;
+	public abstract Atom dehumanize(String rep) throws Exception;
 	
 	/**
 	 * Implements Rep unique state finding. All sanitization and generic processing are called
@@ -172,43 +182,40 @@ public abstract class Representation {
 
 		return states;
 	}
-
+	
 	/**
-	 * Soft constraints to be enforced, picked by config
-	 * follows indexes of {@link Representation#_soft}
-	 * 
-	 * TODO check that all indexes are implemented in soft
-	 * @param soft int[]
+	 * {@see Representation#_constraints}
 	 */
-	public void setImplementedSoft(int[] soft) {
-		this.setSoftConstraints(soft);
-	};
+	protected void setConstraints() {
+		_constraints = new ArrayList<Lambda>();
+	}
 	
 	/**
 	 * Hard constraints to be enforced, picked by config
 	 * follows indexes of {@link Representation#_hard}
 	 * 
-	 * TODO check that all indexes are implemented in hard
 	 * @param hard int[]
 	 */
 	public void setImplementedHard(int[] hard) {
-		this.setHardConstraints(hard);
+		_hard = new ArrayList<Lambda>();
+
+		for(int s: hard) {
+			_hard.add(_constraints.get((s - 1)));
+		}
 	};
-	
+
 	/**
-	 * Sets basic soft constrains, all implementations need to extend this
+	 * Soft constraints to be enforced, picked by config
+	 * follows indexes of {@link Representation#_soft}
+	 * 
 	 * @param soft int[]
 	 */
-	protected void setSoftConstraints(int[] soft) {
+	public void setImplementedSoft(int[] soft) {
 		_soft = new ArrayList<Lambda>();
-	};
-	
-	/**
-	 * Sets basic hard constrains, all implementations need to extend this
-	 * @param hard
-	 */
-	protected void setHardConstraints(int[] hard) {
-		_hard = new ArrayList<Lambda>();
+		
+		for(int s: soft) {
+			_soft.add(_constraints.get((s - 1)));
+		}
 	};
 	
 	/**
