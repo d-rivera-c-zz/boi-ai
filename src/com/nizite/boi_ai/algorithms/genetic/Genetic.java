@@ -22,7 +22,6 @@ public class Genetic extends Algorithm {
 	public void setup(Object... setup) {
 		this._populationSize = (int) setup[0];
 		this._population = new Atom[this._populationSize];
-		this._bestSolution = this._problem.getRepresentation().createAtom();
 		this._mutation = (double) setup[1];
 		this._crossover = (double) setup[2];
 	}
@@ -76,8 +75,9 @@ public class Genetic extends Algorithm {
 	
 
 	private void initialPopulation() {
+		_bestSolution = _representation.createAtom();
 		for (int i = 0; i < this._populationSize; i++) {
-			this._population[i] = this._problem.getRepresentation().createAtom();
+			this._population[i] = _representation.createAtom();
 		}
 	}
 	

@@ -16,10 +16,8 @@ import com.nizite.boi_ai.problems.Problem;
  */
 public abstract class Representation {
 	/**
-	 * Representation of the problem
-	 * Used to persist hardcoded restrictions
-	 * Problem is set within the rep to avoid mixing Problem and Rep all the time
-	 * Since the definition of the Problem depends on the Rep, it makes sense to store it as an Atom
+	 * Representation of the problem. Used to persist hardcoded restrictions.
+	 * Since the definition of the Problem depends on the Rep, it makes sense to store it as an Atom.
 	 */
 	protected Atom _problem;
 	
@@ -66,7 +64,7 @@ public abstract class Representation {
 	 * @param problem
 	 * @throws Exception
 	 */
-	public abstract void setProblem(Object... problem) throws Exception;
+	public abstract void setProblem(Object[] problem) throws Exception;
 	
 	/**
 	 * @see Representation#_objective
@@ -81,7 +79,7 @@ public abstract class Representation {
 	
 	/**
 	 * Creates a new Atom filled with random "solution"
-	 * Any new representation creation constrains (like "row needs to have only valid numbers" 
+	 * Any new representation creation constrains (like "row needs to have only valid numbers") 
 	 * needs to be defined here
 	 * @return Atom
 	 */

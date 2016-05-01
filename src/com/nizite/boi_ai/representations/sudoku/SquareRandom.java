@@ -22,7 +22,7 @@ public class SquareRandom extends Representation {
 	protected String _square;
 
 	@Override
-	public void setProblem(Object... problem) throws Exception {
+	public void setProblem(Object[] problem) throws Exception {
 		_size = (int) problem[0];
 		_square = (String) problem[1];
 		_problem = this.dehumanize(_square);

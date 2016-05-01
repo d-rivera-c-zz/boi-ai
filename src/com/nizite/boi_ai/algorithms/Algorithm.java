@@ -37,12 +37,6 @@ public abstract class Algorithm {
 	protected Integer _explorationBreakpoint;
 	
 	/**
-	 * Problem object. So far only used to get the rep out of it
-	 * TODO try to get rid of this
-	 */
-	protected Problem _problem;
-	
-	/**
 	 * Representation object. Used to get the Problem Atom and calculate fitness and get Atoms
 	 */
 	protected Representation _representation;
@@ -103,8 +97,8 @@ public abstract class Algorithm {
 	/**
 	 * @see Algorithm#_representation
 	 */
-	protected void setRepresentation() {
-		_representation = _problem.getRepresentation();
+	public void setRepresentation(Representation representation) {
+		_representation = representation;
 	};
 	
 	/**
@@ -114,15 +108,6 @@ public abstract class Algorithm {
 	protected void setBestSolution(Atom best) {
 		_bestSolution = best;
 	};
-	
-	/**
-	 * @see Algorithm#_problem
-	 * @param problem
-	 */
-	public void setProblem(Problem problem) {
-		this._problem = problem;
-		this.setRepresentation();
-	}
 	
 	/**
 	 * @see Algorithm#_bestSolution

@@ -16,11 +16,6 @@ import com.nizite.boi_ai.utils.Parser;
  * @version 0.1
  */
 public abstract class Problem {
-	/**
-	 * Basic representation to be used.
-	 * Add problem definition, defined by initial space.
-	 */
-	protected Representation _representation;
 	
 	/**
 	 * Hardcoded constraints.
@@ -36,14 +31,14 @@ public abstract class Problem {
 	 * Set up in {@link Problem#config(String, String, String), picked by the user.
 	 * Follows the indexes set in {@link Problem#_soft}
 	 */
-	protected int[] _implementedSoft;
+	protected int[] _soft;
 	
 	/**
 	 * Hard constraints to be enforced.
 	 * Set up in {@link Problem#config(String, String, String)}, picked by the user.
 	 * Follows the indexes set in {@link Problem#_hard}
 	 */
-	protected int[] _implementedHard;
+	protected int[] _hard;
 	
 	/**
 	 * Text-only explanation of what the objective function should do.
@@ -57,81 +52,73 @@ public abstract class Problem {
 	/* *********************** */
 	
 	/**
-	 * Receives a String read from a config file and parses it
-	 * in its important parts (unique to each problem).
+	 * Receives a String read from a config file and parses it in its important parts (unique to each problem).
 	 * Saves in the unique variables all info needed.
-	 * Also instantiates Representation with things set up in config and picks SC and HC
-	 * 
+	 * Sets problem specific variables. Should be used to parse a String defining the whole problem and divide it into different variables. 
+	 *
 	 * @param setup
 	 * @throws Exception 
 	 * @throws NumberFormatException 
 	 */
 	public abstract void setup(String setup) throws NumberFormatException, Exception;
 	
-	
 	/**
-	 * TODO: check exceptions
+	 * The only way to get the problem's detail info after parsing and organizing the setup file.
+	 * It's up to Representation to organize this into an Atom to be handled within its class.
 	 * 
-	 * Sets problem specific variables.
-	 * Should be used to parse a String defining the whole problem and divide it into different
-	 * variables.
-	 * Should be called by {@link Problem#setup(String)}
-	 * 
-	 * @param problem String that defines the problem
-	 * @throws Exception
+	 * @return Object[] with all the parsed info of the problem.
 	 */
-	protected abstract void setProblem(String problem) throws Exception;
-
+	public abstract Object[] getInfo();
 	
 	/* *********************** */
 	/*      DEFINED FUNCS      */
 	/* *********************** */
 	
 	/**
-	 * Sets what representation is going to be used and how many soft & hard constraints
-	 * to be aware of. Mainly to be passed to Representation instance.
+	 * Sets how many soft & hard constraints to be aware of. 
+	 * While it doesn't do anything with it, all the config and setup is stored in the Problem to be
+	 * accessible by Representations and Algorithms if needed.
 	 * 
-	 * @param rep
 	 * @param soft
 	 * @param hard
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
 	 */
-	public void config(String rep, String soft, String hard) 
+	public void config(String soft, String hard) 
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		this.setConstraints();
 		this.setObjectiveFunction();
-		
-		this.setRepresentation(rep);
-		_representation.setImplementedSoft(Parser.stringToIntArray(soft));
-		_representation.setImplementedHard(Parser.stringToIntArray(hard));
-	};	
-	
 
-	/**
-	 * TODO: doesn't make sure class actually exists
-	 * TODO: check the exception thrown and reduce/compress them
-	 * 
-	 * Creates a new Representation object, with the subclass detailed in {@link Problem#config(String, String, String)}.
-	 * The representation is stored in {@link Problem#_representation}
-	 * 
-	 * @param rep name of the {@link Representation} class to use
-	 * @throws ClassNotFoundException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	protected void setRepresentation(String rep) 
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Class<?> c = Class.forName(rep);
-		this._representation = (Representation) c.newInstance();
+		this.setSoftConstraints(soft);
+		this.setHardConstraints(hard);
+
 	};
+	
+	/* *********************** */
+	/*        SETTERS          */
+	/* *********************** */
 	
 	/**
 	 * Initialized {@link Problem#_constraints} as an empty list
 	 */
 	protected void setConstraints() {
 		_constraints = new ArrayList<String>();
+	}
+	
+	/**
+	 * Set soft constraints that needs to be enforced.
+	 * 
+	 * @param hard
+	 */
+	protected void setSoftConstraints(String soft) {
+		_soft = Parser.stringToIntArray(soft);
+	}
+	
+	/**
+	 * Set hard constraints that needs to be enforced.
+	 * 
+	 * @param hard
+	 */
+	protected void setHardConstraints(String hard) {
+		_hard = Parser.stringToIntArray(hard);
 	}
 
 	/**
@@ -141,18 +128,29 @@ public abstract class Problem {
 		this._objectiveFunction = "";
 	};
 	
-	/**
-	 * @see Problem#_representation
-	 */
-	public Representation getRepresentation() {
-		return this._representation;
-	};
+	/* *********************** */
+	/*        GETTERS          */
+	/* *********************** */
 	
 	/**
 	 * @see Problem#_constraints
 	 */
 	public List<String> getConstraints() {
 		return _constraints;
+	}
+	
+	/**
+	 * @see Problem#_soft
+	 */
+	public int[] getSoftConstraints() {
+		return _soft;
+	}
+	
+	/**
+	 * @see Problem#_hard
+	 */
+	public int[] getHardConstraints() {
+		return _hard;
 	}
 	
 	/**

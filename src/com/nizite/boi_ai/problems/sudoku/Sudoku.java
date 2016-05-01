@@ -32,13 +32,8 @@ public class Sudoku extends Problem {
 	 * @param setup String
 	 */
 	public void setup(String setup) throws NumberFormatException, Exception {
-		this.setProblem(setup);
-		this._representation.setProblem(this._size, this._square);
-	}
-	
-	@Override
-	protected void setProblem(String problem) throws Exception {
-		String lines[] = problem.split("\\r?\\n");
+		// splits the sudoku squares to parse it into an object
+		String lines[] = setup.split("\\r?\\n");
 		
 		String square = "";
 		for(int i = 2; i < lines.length; i++) {
@@ -49,24 +44,20 @@ public class Sudoku extends Problem {
 		this.setSquare(square);
 	}
 	
+	@Override
+	/**
+	 * 
+	 */
+	public Object[] getInfo() {
+		Object[] info = new Object[2];
+		info[0] = _size;
+		info[1] = _square;
+		return info;
+	}
+	
 	/* *********************** */
 	/*     OVERLOAD FUNCS      */
 	/* *********************** */
-
-	@Override
-	/**
-	 * Direct the class load to all representations specifically for Sudoku problem
-	 * Called by (@link #config())
-	 * @param rep
-	 * @throws ClassNotFoundException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 */
-	protected void setRepresentation(String rep) 
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		rep = "com.nizite.boi_ai.representations.sudoku."+rep;
-		super.setRepresentation(rep);
-	}
 
 	@Override
 	/**
