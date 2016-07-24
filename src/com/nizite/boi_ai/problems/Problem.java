@@ -125,7 +125,7 @@ public abstract class Problem {
 	 * Initializes text-only objective function as empty string
 	 */
 	protected void setObjectiveFunction() {
-		this._objectiveFunction = "";
+		_objectiveFunction = "";
 	};
 	
 	/* *********************** */

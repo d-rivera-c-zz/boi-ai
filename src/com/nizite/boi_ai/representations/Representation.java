@@ -41,7 +41,7 @@ public abstract class Representation {
 	protected List<Lambda> _soft;
 	
 	/**
-	 * Base objective function that calculates fitness of solution
+	 * Base objective function that calculates fitness of solution.
 	 * Puts weight on {@link Representation#_hard} and {@link Representation#_soft}
 	 * Objective function will always need to be a minimize function to simplify implementation
 	 */
@@ -60,6 +60,9 @@ public abstract class Representation {
 	/* *********************** */
 	
 	/**
+	 * Only sets important information of the {@link Problem},
+	 * which can be accessed using {@link Problem#getInfo()}
+	 * 
 	 * @see Representation#_problem
 	 * @param problem
 	 * @throws Exception
@@ -72,13 +75,15 @@ public abstract class Representation {
 	protected abstract void setObjectiveFunction();
 	
 	/**
-	 * Creates a blank representation of an atom
+	 * Creates a blank representation of an atom.
+	 * Depending on the implementation, it can be "semi-blank", pre-filled with hard problem constraints.
+	 * 
 	 * @return Atom
 	 */
 	public abstract Atom blankAtom();
 	
 	/**
-	 * Creates a new Atom filled with random "solution"
+	 * Creates a new Atom filled with random "solution".
 	 * Any new representation creation constrains (like "row needs to have only valid numbers") 
 	 * needs to be defined here
 	 * @return Atom
@@ -93,9 +98,10 @@ public abstract class Representation {
 	public abstract double calculateFitness(Atom atom);
 	
 	/**
-	 * Transforms a String-rep (numbers/bits/options separated by "-") to an Atom
+	 * Transforms a String-rep (numbers/bits/options separated by "-") to an Atom.
 	 * Depends on every implementation of a Rep.
-	 * Normally this will need to do a split("-") and put each number in the corresponding place in the rep
+	 * Normally this will need to do a split("-") and put each number in the corresponding place in the rep.
+	 * 
 	 * @param representation
 	 * @return Atom
 	 */
@@ -103,7 +109,8 @@ public abstract class Representation {
 	
 	/**
 	 * Transform a representation to a String separating each "option" with "-"
-	 * Does not check validity of rep or anything, only transforms
+	 * Does not check validity of rep or anything, only transforms.
+	 * 
 	 * @param atom Atom
 	 * @return String
 	 */
@@ -112,7 +119,8 @@ public abstract class Representation {
 	/**
 	 * Transforms an Atom to a human readable version of the rep.
 	 * This is different than {@link Representation#atomToString(Atom)} because it's not meant to 
-	 * be used within the code process and calculations, only to display the result back to the user
+	 * be used within the code process and calculations, only to display the result back to the user.
+	 * 
 	 * @param atom Atom
 	 * @return String
 	 */
@@ -121,8 +129,9 @@ public abstract class Representation {
 	/**
 	 * Transform a human readable version of the rep to a String that can be parsed
 	 * with {@link Representation#stringToAtom(String)}.
-	 * Normally the first setup of the problem (passed here by {@link Core} 
-	 * will be written in a "humanized" string and will need to be parsed by this function
+	 * Normally the first setup of the problem (passed here by {@link Core}) 
+	 * will be written in a "humanized" string and will need to be parsed by this function.
+	 * 
 	 * @param rep String
 	 * @return Atom
 	 * @throws Exception
@@ -130,38 +139,40 @@ public abstract class Representation {
 	public abstract Atom dehumanize(String rep) throws Exception;
 	
 	/**
-	 * Implements Rep unique state finding. All sanitization and generic processing are called
-	 * in {@link Representation#getAllowedStates}
-	 * @param avoidSelf
+	 * Gets all states a bit can have.
+	 * All sanitization and generic processing are called in {@link Representation#getAllowedStates}.
+	 * @param avoidSelf if set removes element from the list so it can't be picked again,
+	 *        it will not be enforced if we are left with an empty list after removing self
 	 * @return
 	 */
 	protected abstract ArrayList<String> getStates(String avoidSelf);
 	
 	/**
 	 * Finds all neighbors of a solution.
-	 * Depending on the movement function and size of the representation, the number of neigh 
-	 * can increment a lot. Use the "pivot" point to select a subset of neigh.
-	 * If no pivot is implemented, a random pivot will be selected to get a subset of neigh.
+	 * Depending on the movement function and size of the representation, the number of neighbors 
+	 * can increment a lot. Use the "pivot" point (current Atom) to select a subset of neighbors.
+	 * If no pivot is implemented, a random pivot will be selected to get a subset of neighbors.
 	 * Since no enforcement is done on the "random pivot" selection, Reps can change this accordingly
-	 * if it's believed the neigh function will work better that way.
-	 * We don't worry about the size of the neigh list, if it becomes a problem, the class 
+	 * if it's believed the neighbor function will work better that way.
+	 * We don't worry about the size of the neighbors list, if it becomes a problem, the class 
 	 * implementing it should do something about it.
 	 * 
-	 * @return
+	 * @param Atom current solution to get the neighbors from.
+	 * @return ArraList<Atom> neighbors
 	 */
 	public abstract ArrayList<Atom> getNeighbors(Atom current);
+
 	
 	/* *********************** */
 	/*      DEFINED FUNCS      */
 	/* *********************** */
-	
-	
+
 	/**
 	 * Figures out the "states" a "box" can have.
-	 * For example, for sudoku is numbers from 1 to n^2, for schedulling it's all people/equipment/containers
+	 * For example, for sudoku is numbers from 1 to n^2, for scheduling it's all people/equipment/containers
 	 * that can be allocated in one space
 	 * 
-	 * THINK: allow optional " position"  int/string, could be useful when there's restriction on
+	 * THINK: allow optional "position"  int/string, could be useful when there's restriction on
 	 * solutions and not all the states are acceptable for a rep
 	 * THINK: allow null as states
 	 * @param avoidSelf if set removes element from the list so it can't be picked again,
@@ -180,9 +191,13 @@ public abstract class Representation {
 
 		return states;
 	}
-	
+
+	/* *********************** */
+	/*        SETTERS          */
+	/* *********************** */
+
 	/**
-	 * {@see Representation#_constraints}
+	 * @see Representation#_constraints
 	 */
 	protected void setConstraints() {
 		_constraints = new ArrayList<Lambda>();
@@ -197,7 +212,7 @@ public abstract class Representation {
 	public void setImplementedHard(int[] hard) {
 		_hard = new ArrayList<Lambda>();
 
-		for(int s: hard) {
+		for (int s: hard) {
 			_hard.add(_constraints.get((s - 1)));
 		}
 	};
@@ -211,14 +226,18 @@ public abstract class Representation {
 	public void setImplementedSoft(int[] soft) {
 		_soft = new ArrayList<Lambda>();
 		
-		for(int s: soft) {
+		for (int s: soft) {
 			_soft.add(_constraints.get((s - 1)));
 		}
 	};
 	
+	/* *********************** */
+	/*        GETTERS          */
+	/* *********************** */
+	
 	/**
 	 * Getter for {@link Representation#_problem}
-	 * @return
+	 * @return Atom problem
 	 */
 	public Atom getProblem() {
 		return _problem;
