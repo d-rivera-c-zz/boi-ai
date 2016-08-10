@@ -12,7 +12,8 @@ public class Parser {
 	
 	/**
 	 * Transform a string to an int.
-	 * It throws exception and doesn't just default the int to 0 because 0 could be a valid value for an int
+	 * It throws exception and doesn't just default the int to 0 because 0 could be a valid value for an int.
+	 * Prefer this over plain parseInt to add a "throws" to the call
 	 * 
 	 * @param toParse string to transform
 	 * @return int

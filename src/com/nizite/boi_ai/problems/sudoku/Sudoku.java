@@ -30,6 +30,8 @@ public class Sudoku extends Problem {
 	/**
 	 * Parses the String problem and also sets it in the representation
 	 * @param setup String
+	 * 
+	 * @todo: compress every exception into exception to bubble it up
 	 */
 	public void setup(String setup) throws NumberFormatException, Exception {
 		// splits the sudoku squares to parse it into an object
