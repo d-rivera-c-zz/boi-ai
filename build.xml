@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<project name="boi-ai" basedir="." default="main">
+  <!-- Sets variables which can later be used. -->
+  <!-- The value of a property is accessed via ${} -->
+  <property name="build.dir" value="build" />
+  <property name="dist.dir" value="dist" />
+  <property name="docs.dir" value="javadoc" />
+
+  <property name="src.dir" value="src" />
+  <property name="test.dir" value="test" />
+  <property name="main-class" value="com.nizite.boi_ai.Core"/>
+
+  <path id="classpath.test">
+    <pathelement location="lib/junit-4.12.jar"/>
+    <pathelement location="lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${build.dir}/${src.dir}"/>
+  </path>
+
+  <!-- Deletes the existing build, docs and dist directory-->
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete dir="${docs.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+
+  <!-- Creates the  build, docs and dist directory-->
+  <target name="makedir">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${build.dir}/${src.dir}" />
+    <mkdir dir="${build.dir}/${test.dir}" />
+    <mkdir dir="${docs.dir}" />
+    <mkdir dir="${dist.dir}" />
+  </target>
+
+  <!-- Compiles the java code (including the usage of library for JUnit -->
+  <target name="compile" depends="clean, makedir">
+    <javac srcdir="${src.dir}" destdir="${build.dir}/${src.dir}" includeantruntime="false" />
+  </target>
+
+  <!-- Creates Javadoc -->
+  <target name="docs" depends="compile">
+    <javadoc packagenames="${src.dir}" sourcepath="${src.dir}" destdir="${docs.dir}">
+      <!-- Define which files / directory should get included, we include all -->
+       <fileset dir="${src.dir}">
+                <include name="**" />
+           </fileset>
+    </javadoc>
+  </target>
+
+  <!--Creates the deployable jar file  -->
+  <target name="jar" depends="compile">
+    <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}/${src.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main-class}" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="main" depends="jar, docs">
+    <description>Main build</description>
+  </target>
+
+  <target name="run" depends="jar">
+    <description>Executes jar file</description>
+    <java jar="${dist.dir}/${ant.project.name}.jar" fork="true" />
+  </target>
+
+
+  <!--TESTS-->
+  <target name="test-compile" depends="compile">
+    <javac srcdir="${test.dir}" destdir="${build.dir}/${test.dir}" includeantruntime="false">
+        <classpath refid="classpath.test"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="test-compile">
+    <junit printsummary="yes" haltonfailure="no" fork="true">
+        <classpath>
+          <path refid="classpath.test"/>
+          <pathelement location="${build.dir}/${test.dir}"/>
+        </classpath>
+        <formatter type="brief" usefile="false" />
+        <batchtest>
+            <fileset dir="${test.dir}" includes="**/*Test.java" />
+        </batchtest>
+    </junit>
+  </target>
+
+</project>

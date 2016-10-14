@@ -1,32 +1,48 @@
 package com.nizite.boi_ai.representations.sudoku;
 
+import java.util.ArrayList;
 import java.util.Random;
 
+import com.nizite.boi_ai.Config;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Lambda;
 import com.nizite.boi_ai.representations.Representation;
 import com.nizite.boi_ai.utils.Parser;
 
 /**
+ * Square n x n matrix
+ * Random numbers (< n^2) in every empty space.
+ * Depends on penalizations to enforce constrains.
  * 
- * @author experiments
- *
+ * @author d-rivera-c
+ * @version 0.1
  */
-public class SquareMatrix extends Representation {
-	private int _size;
-	private String _square;
+public class SquareRandom extends Representation {
+	protected int _size;
+	protected String _square;
 
 	@Override
-	public void setProblem(Object... problem) throws Exception {
+	public void setProblem(Object[] problem) throws Exception {
 		_size = (int) problem[0];
 		_square = (String) problem[1];
-		_problem = this.stringToAtom(this.dehumanize(_square));
+		_problem = this.dehumanize(_square);
 	}
 	
-
+	@Override
+	/**
+	 * There's really no objective function to enforce here 
+	 * other than minimize hard constrains
+	 */
+	protected void setObjectiveFunction() {
+		_objective = (Atom a) -> {
+			double totalScore = Math.pow(_size, 4) * 3;
+			return totalScore;
+		};
+	}
+	
 	@Override
 	public Atom blankAtom() {
-		return new Atom(new Integer[this._size*this._size][this._size*this._size]);
+		return new Atom(new Integer[_size*_size][_size*_size]);
 	}
 
 	@Override
@@ -36,8 +52,8 @@ public class SquareMatrix extends Representation {
 
 		// set all random
 		Random rn = new Random();
-		for (int i = 0; i < this._size*this._size; i++) {
-			for (int j = 0; j < this._size*this._size; j++) {
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
 				newSquare[i][j] = rn.nextInt(9) + 1;
 				
 				// replace matrix with items on _problem
@@ -62,17 +78,17 @@ public class SquareMatrix extends Representation {
 	public String atomToString(Atom atom) {
 		Integer[][] rep = (Integer[][]) atom.get();
 		String representation = "";
-		for (int i = 0; i < this._size*this._size; i++) {
-			for (int j = 0; j < this._size*this._size; j++) {
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
 				if (rep[i][j] != null) {
-					representation += Integer.toString(rep[i][j]) + "-";
+					representation += Integer.toString(rep[i][j]) + Config.ATOM_SPLIT_CHAR;
 				} else {
-					representation += "-";
+					representation += Config.ATOM_SPLIT_CHAR;
 				}
 			}
 		}
 		
-		// remove last -
+		// remove last "-"
 		representation = representation.substring(0, representation.length()-1);
 		
 		return representation;
@@ -81,14 +97,16 @@ public class SquareMatrix extends Representation {
 
 	@Override
 	/**
-	 * 
+	 * Separated program-created string {@link Representation#stringToAtom} into pieces and
+	 * create an Atom out of it.
+	 * Any invalid value for sudoku (not natural numbers) are translated to null.
 	 */
 	public Atom stringToAtom(String rep) {
 		Integer[][] representation = (Integer[][]) this.blankAtom().get();
 		
-		String[] numbers = rep.split("-");
-		for (int i = 0; i < this._size*this._size; i++) {
-			for (int j = 0; j < this._size*this._size; j++) {
+		String[] numbers = rep.split(Config.ATOM_SPLIT_CHAR);
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
 				try {
 					representation[i][j] = Parser.stringToInt(numbers[i*(_size*_size) + j]);
 				} catch (Exception e) {
@@ -104,9 +122,9 @@ public class SquareMatrix extends Representation {
 
 	@Override
 	public double calculateFitness(Atom atom) {
-		double totalScore = _objective.calc(atom);
-		for(Lambda constrain : _hard) {
-			totalScore -= constrain.calc(atom);
+		double totalScore = 0.0;
+		for(Lambda constraint : _hard) {
+			totalScore += constraint.calc(atom);
 		}
 		
 		return totalScore;
@@ -116,11 +134,11 @@ public class SquareMatrix extends Representation {
 	 * TODO: filter by array
 	 */
 	@Override
-	protected void setHardConstraints(int[] hard) {
-		super.setHardConstraints(hard);
+	protected void setConstraints() {
+		super.setConstraints();
 
 		// Each row must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -143,7 +161,7 @@ public class SquareMatrix extends Representation {
 		});
 		
 		// Each column must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -166,7 +184,7 @@ public class SquareMatrix extends Representation {
 		});
 		
 		// Each n x n square must have all numbers 1-n^2
-		_hard.add((Atom a) -> {
+		_constraints.add((Atom a) -> {
 			double total = 0.0;
 			Integer[][] square = (Integer[][]) a.get();
 			
@@ -199,28 +217,17 @@ public class SquareMatrix extends Representation {
 		});
 	}
 
+
 	@Override
 	/**
-	 * There's really no objective function to enforce here 
-	 * other than minimize hard constrains
+	 * Converts the atom to a recognizable sudoku matrix separated by "-"  and "."
 	 */
-	protected void setObjectiveFunction() {
-		_objective = (Atom a) -> {
-			double totalScore = Math.pow(_size, 4) * 3;
-			return totalScore;
-		};
-	}
-
-
-	@Override
 	public String humanize(Atom atom) {
 		Integer[][] rep = (Integer[][]) atom.get();
 		String representation = "";
-		for (int i = 0; i < this._size*this._size; i++) {
-			for (int j = 0; j < this._size*this._size; j++) {
-				if (rep[i][j] != null) {
-					representation += Integer.toString(rep[i][j]);
-				}
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
+				representation += Parser.integerToString(rep[i][j]);
 				
 				if(((j+1) % _size) == 0)
 					representation += ".";
@@ -228,6 +235,7 @@ public class SquareMatrix extends Representation {
 					representation += "-";
 			}
 			representation += "\r\n";
+			
 			if(((i+1) % _size) == 0) {
 				for(int k = 0; k < (_size*_size)+_size; k++) {
 					representation += ".";
@@ -240,7 +248,7 @@ public class SquareMatrix extends Representation {
 	}
 
 	@Override
-	public String dehumanize(String rep) throws Exception {
+	public Atom dehumanize(String rep) throws Exception {
 		String atom = "";
 		String lines[] = rep.split("\\r?\\n");
 		
@@ -257,22 +265,73 @@ public class SquareMatrix extends Representation {
 					atom += digit;
 				} catch (Exception e) {}
 				
-				atom += "-";
+				atom += Config.ATOM_SPLIT_CHAR;
 			}
 		}
 		atom = atom.substring(0, atom.length()-1);
 
-		return atom;
+		Atom atomObject = this.stringToAtom(atom);
+		return atomObject;
 	}
 
 	@Override
-	public String mutate(String premutation) {
-		Random rn = new Random();
-		int mutation = 1;
-		do {
-			mutation = rn.nextInt(_size*_size) + 1;
-		} while (mutation == Parser.stringToInt(premutation));
+	protected ArrayList<String> getStates(String avoidSelf) {
+		ArrayList<String> states = new ArrayList<String>();
 		
-		return mutation + "";
+		// all numbers from 1 to n^2 are allowed
+		for(int i = 1; i <= _size * _size; i++) {
+			states.add(Integer.toString(i));
+		}
+
+		return states;
+	}
+
+
+	@Override
+	/**
+	 * Pick one random row,
+	 * pivot all numbers of the row,
+	 * don't pivot the ones in the problem
+	 */
+	public ArrayList<Atom> getNeighbors(Atom current) {
+		ArrayList<Atom> neighbors = new ArrayList<Atom>();
+		
+		Random rn = new Random();
+		int row = rn.nextInt(_size*_size);
+		Integer[][] toPivot = (Integer[][]) current.get();
+		Integer[][] problem = (Integer[][]) _problem.get();
+
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = i; j < _size*_size; j++) {
+				// if [i][j] has number, don't move it
+				if (problem[row][i] != null || problem[row][j] != null)
+					continue;
+				
+				//copy
+				Integer[][] copy = (Integer[][]) this.blankAtom().get();
+				for(int k = 0; k < toPivot.length; k++)
+					  for(int l = 0; l < toPivot[k].length; l++)
+					    copy[k][l] = toPivot[k][l];
+
+				int temp = copy[row][i];
+				copy[row][i] = copy[row][j];
+				copy[row][j] = temp;
+				
+				// replace matrix with items on _problem
+				for (int x = 0; x < _size*_size; x++) {
+					for (int y = 0; y < _size*_size; y++) {
+						if (problem[x][y] != null && problem[x][y] != 0) {
+							copy[x][y] = problem[x][y];
+						}
+					}
+				}
+				
+				Atom atom = new Atom(copy);
+				atom.setFitness(this.calculateFitness(atom));
+				neighbors.add(atom);
+			}
+		}
+		
+		return neighbors;
 	}
 }
