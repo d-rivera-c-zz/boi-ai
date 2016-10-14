@@ -3,6 +3,7 @@ package com.nizite.boi_ai.algorithms.genetic;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.nizite.boi_ai.Config;
 import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.representations.Atom;
 
@@ -21,7 +22,6 @@ public class Genetic extends Algorithm {
 	public void setup(Object... setup) {
 		this._populationSize = (int) setup[0];
 		this._population = new Atom[this._populationSize];
-		this._bestSolution = this._problem.getRepresentation().createAtom();
 		this._mutation = (double) setup[1];
 		this._crossover = (double) setup[2];
 	}
@@ -75,8 +75,9 @@ public class Genetic extends Algorithm {
 	
 
 	private void initialPopulation() {
+		_bestSolution = _representation.createAtom();
 		for (int i = 0; i < this._populationSize; i++) {
-			this._population[i] = this._problem.getRepresentation().createAtom();
+			this._population[i] = _representation.createAtom();
 		}
 	}
 	
@@ -92,18 +93,18 @@ public class Genetic extends Algorithm {
 				} else {
 					//crossover
 					String parent1S = _representation.atomToString(parent1);
-					int separators = parent1S.length() - parent1S.replace("-", "").length();
+					int separators = parent1S.length() - parent1S.replace(Config.ATOM_SPLIT_CHAR, "").length();
 					int middle = separators / 2;
 
-				    int pos1 = parent1S.indexOf("-", 0);
+				    int pos1 = parent1S.indexOf(Config.ATOM_SPLIT_CHAR, 0);
 				    int fake = middle;
 				    while (fake-- > 0 && pos1 != -1)
-				        pos1 = parent1S.indexOf('-', pos1+1);
+				        pos1 = parent1S.indexOf(Config.ATOM_SPLIT_CHAR, pos1+1);
 				    
 				    String parent2S = _representation.atomToString(_population[i]);
-				    int pos2 = parent2S.indexOf('-', 0);
+				    int pos2 = parent2S.indexOf(Config.ATOM_SPLIT_CHAR, 0);
 				    while (middle-- > 0 && pos2 != -1)
-				        pos2 = parent2S.indexOf('-', pos2+1);
+				        pos2 = parent2S.indexOf(Config.ATOM_SPLIT_CHAR, pos2+1);
 				    
 				    String child1 = parent1S.substring(0, pos1) + parent2S.substring(pos1, parent2S.length());
 				    String child2 = parent2S.substring(0, pos2) + parent1S.substring(pos2, parent1S.length());
@@ -132,10 +133,10 @@ public class Genetic extends Algorithm {
 	 */
 	private void mutation() {
 		Random rn = new Random();
-		String[] problem = _representation.atomToString(_representation.getProblem()).split("-", -1);
+		String[] problem = _representation.atomToString(_representation.getProblem()).split(Config.ATOM_SPLIT_CHAR, -1);
 		
 		for (int i = 0; i < _population.length; i++) {
-			String[] digits = _representation.atomToString(_population[i]).split("-", -1);
+			String[] digits = _representation.atomToString(_population[i]).split(Config.ATOM_SPLIT_CHAR, -1);
 
 			String mutated = "";
 			for (int j = 0; j < digits.length; j++) {
@@ -145,7 +146,7 @@ public class Genetic extends Algorithm {
 				} else {
 					mutated += digits[j];
 				}
-				mutated += "-";
+				mutated += Config.ATOM_SPLIT_CHAR;
 			}
 			mutated = mutated.substring(0, mutated.length()-1);
 			

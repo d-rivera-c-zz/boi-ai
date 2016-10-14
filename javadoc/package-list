@@ -1,0 +1,9 @@
+com.nizite.boi_ai
+com.nizite.boi_ai.algorithms
+com.nizite.boi_ai.algorithms.genetic
+com.nizite.boi_ai.algorithms.tabu
+com.nizite.boi_ai.problems
+com.nizite.boi_ai.problems.sudoku
+com.nizite.boi_ai.representations
+com.nizite.boi_ai.representations.sudoku
+com.nizite.boi_ai.utils
