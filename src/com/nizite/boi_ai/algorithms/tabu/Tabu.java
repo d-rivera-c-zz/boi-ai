@@ -23,8 +23,13 @@ public class Tabu extends Algorithm {
 	public void setup(Object... setup) {
 		_tabu = new LinkedList<Atom>();
 		_tabuSize = (int) setup[0];
+	}
+	
+	public void run() {
+		// put a random solution as the best one to have something to compare
 		_bestSolution = _representation.createAtom();
 		_currentSolution = _bestSolution;
+		super.run();
 	}
 
 	@Override

@@ -139,7 +139,7 @@ public abstract class Representation {
 	public abstract Atom dehumanize(String rep) throws Exception;
 	
 	/**
-	 * Gets all states a bit can have.
+	 * Gets all states a bit (that's it, a cell in the representation) can have.
 	 * All sanitization and generic processing are called in {@link Representation#getAllowedStates}.
 	 * @param avoidSelf if set removes element from the list so it can't be picked again,
 	 *        it will not be enforced if we are left with an empty list after removing self
@@ -170,7 +170,7 @@ public abstract class Representation {
 	/**
 	 * Figures out the "states" a "box" can have.
 	 * For example, for sudoku is numbers from 1 to n^2, for scheduling it's all people/equipment/containers
-	 * that can be allocated in one space
+	 * that can be allocated in one space.
 	 * 
 	 * THINK: allow optional "position"  int/string, could be useful when there's restriction on
 	 * solutions and not all the states are acceptable for a rep

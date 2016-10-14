@@ -1,6 +1,5 @@
 package com.nizite.boi_ai.algorithms;
 
-import com.nizite.boi_ai.problems.Problem;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Representation;
 
