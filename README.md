@@ -79,3 +79,6 @@ There's example files for each problem on the ` examples` folder.
 
 #Docs
 Maybe you need some context or info about a problem or algorithm. Go to the docs folder :)
+
+#TODOs
+- Implement Template pattern instead of making classes abstract? https://en.wikipedia.org/wiki/Template_method_pattern

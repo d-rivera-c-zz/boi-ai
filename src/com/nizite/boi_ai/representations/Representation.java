@@ -197,6 +197,7 @@ public abstract class Representation {
 	/* *********************** */
 
 	/**
+	 * @todo should probably make it abstract, otherwise it's not forced to be implemented
 	 * @see Representation#_constraints
 	 */
 	protected void setConstraints() {

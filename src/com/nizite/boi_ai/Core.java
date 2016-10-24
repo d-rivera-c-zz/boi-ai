@@ -4,10 +4,11 @@ import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.algorithms.genetic.Genetic;
 import com.nizite.boi_ai.algorithms.tabu.Tabu;
 import com.nizite.boi_ai.problems.Problem;
-import com.nizite.boi_ai.problems.nurse_scheduling.Nurses2;
+import com.nizite.boi_ai.problems.nurse_scheduling.NurseScheduling;
 import com.nizite.boi_ai.problems.sudoku.Sudoku;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Representation;
+import com.nizite.boi_ai.representations.nurse_scheduling.MatrixRandom;
 import com.nizite.boi_ai.representations.sudoku.SquareRandom;
 import com.nizite.boi_ai.representations.sudoku.SquareValidRows;
 import com.nizite.boi_ai.utils.FileReader;
@@ -52,10 +53,10 @@ public class Core {
 	}
 	
 	public static void geneticSudoku() throws NumberFormatException, Exception {
-		//String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
+		String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9hard.txt"); //hard
-		String problem = FileReader.toString("examples/problems/sudoku/16x16hard.txt"); //hard
+		//String problem = FileReader.toString("examples/problems/sudoku/16x16hard.txt"); //hard
 		//String problem = FileReader.toString("examples/problems/sudoku/25x25medium.txt");
 		Problem sudoku = new Sudoku();
 		sudoku.config("", "1, 2, 3");
@@ -76,10 +77,10 @@ public class Core {
 	}
 	
 	public static void tabuSudoku() throws NumberFormatException, Exception {
-		//String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
+		String problem = FileReader.toString("examples/problems/sudoku/9x9easy.txt"); //easy
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9medium.txt"); //medium
 		//String problem = FileReader.toString("examples/problems/sudoku/9x9hard.txt"); //hard
-		String problem = FileReader.toString("examples/problems/sudoku/16x16hard.txt"); //hard
+		//String problem = FileReader.toString("examples/problems/sudoku/16x16hard.txt"); //hard
 		//String problem = FileReader.toString("examples/problems/sudoku/25x25medium.txt");
 		Problem sudoku = new Sudoku();
 		sudoku.config("", "1, 2, 3");
@@ -88,7 +89,7 @@ public class Core {
 		Representation square = new SquareValidRows();
 
 		// read config file and turn on solution
-		int iterations = 10000;
+		int iterations = 100000;
 		int tabuSize = 10;
 		Algorithm algorithm = new Tabu();
 		algorithm.config(iterations, null, null);
@@ -98,17 +99,21 @@ public class Core {
 	}
 	
 	
-	public static void nursesEasy() {
-		String problem = "28\n"
-				+ "3\n"
-				+ "30";
-		Problem nurses = new Nurses2();
-//		try {
-//			nurses.config("Matrix", "1", "1, 2, 3, 4");
-//			nurses.setup(problem);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
+	public static void nursesEasy() throws NumberFormatException, Exception {
+		String problem = "7\n"
+						+ "6";
+		Problem nurses = new NurseScheduling();
+		nurses.config("", "1");
+		nurses.setup(problem);
+		
+		Representation matrix = new MatrixRandom();
+		
+		int iterations = 10000;
+		int tabuSize = 10;
+		Algorithm algorithm = new Tabu();
+		algorithm.config(iterations, null, null);
+		algorithm.setup(tabuSize);
+		
+		run(nurses, matrix, algorithm);
 	}
 }
