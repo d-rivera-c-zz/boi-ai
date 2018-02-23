@@ -39,11 +39,9 @@
 
   <!-- Creates Javadoc -->
   <target name="docs" depends="compile">
-    <javadoc packagenames="${src.dir}" sourcepath="${src.dir}" destdir="${docs.dir}">
+    <javadoc packagenames="${src.dir}" sourcepath="${src.dir}" destdir="${docs.dir}" author="true" version="true">
       <!-- Define which files / directory should get included, we include all -->
-       <fileset dir="${src.dir}">
-                <include name="**" />
-           </fileset>
+      <fileset dir="${src.dir}" />
     </javadoc>
   </target>
 
@@ -69,20 +67,20 @@
   <!--TESTS-->
   <target name="test-compile" depends="compile">
     <javac srcdir="${test.dir}" destdir="${build.dir}/${test.dir}" includeantruntime="false">
-        <classpath refid="classpath.test"/>
+      <classpath refid="classpath.test"/>
     </javac>
   </target>
 
   <target name="test" depends="test-compile">
     <junit printsummary="yes" haltonfailure="no" fork="true">
-        <classpath>
-          <path refid="classpath.test"/>
-          <pathelement location="${build.dir}/${test.dir}"/>
-        </classpath>
-        <formatter type="brief" usefile="false" />
-        <batchtest>
-            <fileset dir="${test.dir}" includes="**/*Test.java" />
-        </batchtest>
+      <classpath>
+        <path refid="classpath.test"/>
+        <pathelement location="${build.dir}/${test.dir}"/>
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest>
+        <fileset dir="${test.dir}" includes="**/*Test.java" />
+      </batchtest>
     </junit>
   </target>
 
