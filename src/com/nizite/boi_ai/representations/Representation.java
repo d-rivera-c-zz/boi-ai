@@ -129,7 +129,7 @@ public abstract class Representation {
 	/**
 	 * Transform a human readable version of the rep to a String that can be parsed
 	 * with {@link Representation#stringToAtom(String)}.
-	 * Normally the first setup of the problem (passed here by {@link Core}) 
+	 * Normally the first setup of the problem (passed here by {@link com.nizite.boi_ai.Core}) 
 	 * will be written in a "humanized" string and will need to be parsed by this function.
 	 * 
 	 * @param rep String
@@ -143,7 +143,7 @@ public abstract class Representation {
 	 * All sanitization and generic processing are called in {@link Representation#getAllowedStates}.
 	 * @param avoidSelf if set removes element from the list so it can't be picked again,
 	 *        it will not be enforced if we are left with an empty list after removing self
-	 * @return
+	 * @return ArrayList<String> states
 	 */
 	protected abstract ArrayList<String> getStates(String avoidSelf);
 	
@@ -157,7 +157,7 @@ public abstract class Representation {
 	 * We don't worry about the size of the neighbors list, if it becomes a problem, the class 
 	 * implementing it should do something about it.
 	 * 
-	 * @param Atom current solution to get the neighbors from.
+	 * @param current solution to get the neighbors from.
 	 * @return ArraList<Atom> neighbors
 	 */
 	public abstract ArrayList<Atom> getNeighbors(Atom current);

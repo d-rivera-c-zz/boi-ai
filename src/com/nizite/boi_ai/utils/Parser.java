@@ -28,7 +28,7 @@ public class Parser {
 	 * Accepts a string to be use as a separator on split, removes all spaces before and after the separator
 	 * @param toParse
 	 * @param separator defaults to ","
-	 * @return
+	 * @return int[] string to int array
 	 */
 	public static int[] stringToIntArray(String toParse, String separator) {
 		if (separator == null || separator.trim().equals(""))
@@ -71,7 +71,7 @@ public class Parser {
 	/**
 	 * Creates a valid string out of an integer. If integer is not valid it will return ""
 	 * @param number
-	 * @return
+	 * @return String int (can be null) to String
 	 */
 	public static String integerToString(Integer number) {
 		if (number == null)

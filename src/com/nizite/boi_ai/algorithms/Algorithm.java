@@ -30,8 +30,7 @@ public abstract class Algorithm {
 	 * to make incentives to explore other spaces.
 	 * Equal null if not required.
 	 * 
-	 * TODO break after x iterations if best solution remains the same (check if it's sane to do it)
-	 * @todo
+	 * TODO @todo break after x iterations if best solution remains the same (check if it's sane to do it)
 	 */
 	protected Integer _explorationBreakpoint;
 	
@@ -68,7 +67,7 @@ public abstract class Algorithm {
 	/**
 	 * Configuration used by all algorithms.
 	 * If more that one is set (example: time and iterations), then whichever is reached first will be the stop criteria
-	 * @todo So far only cares about stop criteria
+	 * TODO @todo So far only cares about stop criteria
 	 * @param iterations
 	 * @param time
 	 * @param explorationBP
@@ -110,7 +109,7 @@ public abstract class Algorithm {
 	
 	/**
 	 * @see Algorithm#_bestSolution
-	 * @return
+	 * @return Atom
 	 */
 	public Atom getBestSolution() {
 		return _bestSolution;

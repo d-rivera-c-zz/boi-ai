@@ -31,7 +31,7 @@ public class FileReader {
 	 * Converts a reader to string.
 	 * 
 	 * @param reader
-	 * @return
+	 * @return String file as String
 	 * @throws IOException
 	 */
 	public static String toString(BufferedReader reader) throws IOException {

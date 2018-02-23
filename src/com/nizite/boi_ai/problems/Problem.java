@@ -28,14 +28,14 @@ public abstract class Problem {
 	
 	/**
 	 * Soft constraints to be enforced.
-	 * Set up in {@link Problem#config(String, String, String), picked by the user.
+	 * Set up in {@link Problem#config(String, String)}, picked by the user.
 	 * Follows the indexes set in {@link Problem#_soft}
 	 */
 	protected int[] _soft;
 	
 	/**
 	 * Hard constraints to be enforced.
-	 * Set up in {@link Problem#config(String, String, String)}, picked by the user.
+	 * Set up in {@link Problem#config(String, String)}, picked by the user.
 	 * Follows the indexes set in {@link Problem#_hard}
 	 */
 	protected int[] _hard;
@@ -106,7 +106,7 @@ public abstract class Problem {
 	/**
 	 * Set soft constraints that needs to be enforced.
 	 * 
-	 * @param hard
+	 * @param soft
 	 */
 	protected void setSoftConstraints(String soft) {
 		_soft = Parser.stringToIntArray(soft);
