@@ -45,6 +45,19 @@ public class Core {
 		r.setProblem(p.getInfo());
 		a.setRepresentation(r);
 		
+		// TODO implement logger
+		System.out.println("Objective function defined:");
+		System.out.println(p.getObjectiveFunction());
+		System.out.println("\nAvailable constraints to enforce:");
+		for (String constrain : p.getConstraints())
+			System.out.println(constrain);
+		System.out.println("\nHard constraints to enforce:");
+		for (String constrain : p.getHardConstraintsAsString())
+			System.out.println(constrain);
+		System.out.println("\nSoft constraints to enforce:");
+		for (String constrain : p.getSoftConstraintsAsString())
+			System.out.println(constrain);
+		
 		a.run();
 		Atom solution = a.getBestSolution();
 		System.out.println(r.humanize(solution));

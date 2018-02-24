@@ -48,7 +48,7 @@ public abstract class Representation {
 	protected Lambda _objective;
 	
 	/**
-	 * Makes sure the objective function is always initialized
+	 * Makes sure the objective function and constraints are always initialized
 	 */
 	public Representation() {
 		this.setObjectiveFunction();
@@ -68,15 +68,28 @@ public abstract class Representation {
 	 * @throws Exception
 	 */
 	public abstract void setProblem(Object[] problem) throws Exception;
-	
+
 	/**
+	 * Defines the functions to calculate if a constraint is broken or not
+	 * 
+	 * @see Representation#_constraints
+	 */
+	protected abstract void setConstraints();
+
+	/**
+	 * Defines function to calculate the objective function value.
+	 * To be able to make this whole project more reusable, the general goal for everything should be to 
+	 * minimize this function (consider it a cost function).
+	 * 
+	 * TODO @todo consider having a default option for this: penalize hard constraints with 3 points and soft with 1?
+	 * 
 	 * @see Representation#_objective
 	 */
 	protected abstract void setObjectiveFunction();
 	
 	/**
 	 * Creates a blank representation of an atom.
-	 * Depending on the implementation, it can be "semi-blank", pre-filled with hard problem constraints.
+	 * Depending on the implementation, it can be "semi-blank" or pre-filled with hard problem constraints.
 	 * 
 	 * @return Atom
 	 */
@@ -84,14 +97,16 @@ public abstract class Representation {
 	
 	/**
 	 * Creates a new Atom filled with random "solution".
-	 * Any new representation creation constrains (like "row needs to have only valid numbers") 
+	 * Any new representation creation constraints (like "row needs to have only valid numbers") 
 	 * needs to be defined here
+	 * 
 	 * @return Atom
 	 */
 	public abstract Atom createAtom();
 	
 	/**
 	 * Calculate fitness of an atom based on the objective function defined
+	 * 
 	 * @param atom Atom
 	 * @return double
 	 */
@@ -139,8 +154,9 @@ public abstract class Representation {
 	public abstract Atom dehumanize(String rep) throws Exception;
 	
 	/**
-	 * Gets all states a bit (that's it, a cell in the representation) can have.
+	 * Gets all states a bit (that is, a cell in the representation) can have.
 	 * All sanitization and generic processing are called in {@link Representation#getAllowedStates}.
+	 * 
 	 * @param avoidSelf if set removes element from the list so it can't be picked again,
 	 *        it will not be enforced if we are left with an empty list after removing self
 	 * @return ArrayList<String> states
@@ -154,7 +170,7 @@ public abstract class Representation {
 	 * If no pivot is implemented, a random pivot will be selected to get a subset of neighbors.
 	 * Since no enforcement is done on the "random pivot" selection, Reps can change this accordingly
 	 * if it's believed the neighbor function will work better that way.
-	 * We don't worry about the size of the neighbors list, if it becomes a problem, the class 
+	 * We don't worry about the size of the neighbors list, but if it becomes a problem, the class 
 	 * implementing it should do something about it.
 	 * 
 	 * @param current solution to get the neighbors from.
@@ -195,18 +211,10 @@ public abstract class Representation {
 	/* *********************** */
 	/*        SETTERS          */
 	/* *********************** */
-
-	/**
-	 * @todo should probably make it abstract, otherwise it's not forced to be implemented
-	 * @see Representation#_constraints
-	 */
-	protected void setConstraints() {
-		_constraints = new ArrayList<Lambda>();
-	}
 	
 	/**
 	 * Hard constraints to be enforced, picked by config
-	 * follows indexes of {@link Representation#_hard}
+	 * follows indexes of {@link Representation#_constraints}
 	 * 
 	 * @param hard int[]
 	 */
@@ -220,7 +228,7 @@ public abstract class Representation {
 
 	/**
 	 * Soft constraints to be enforced, picked by config
-	 * follows indexes of {@link Representation#_soft}
+	 * follows indexes of {@link Representation#_constraints}
 	 * 
 	 * @param soft int[]
 	 */

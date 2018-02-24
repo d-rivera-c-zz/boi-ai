@@ -19,6 +19,7 @@ public class Sudoku extends Problem {
 	
 	/**
 	 * Initial set of filled in number boxes to start with. It can be an empty board too.
+	 * See `examples` folder for ideas on board definition.
 	 */
 	private String _square;
 
@@ -26,13 +27,13 @@ public class Sudoku extends Problem {
 	/*      DEFINED FUNCS      */
 	/* *********************** */
 
-	@Override
 	/**
 	 * Parses the String problem and also sets it in the representation
-	 * @param setup String
-	 * 
 	 * @todo: compress every exception into exception to bubble it up
+	 * 
+	 * @param setup String
 	 */
+	@Override
 	public void setup(String setup) throws NumberFormatException, Exception {
 		// splits the sudoku squares to parse it into an object
 		String lines[] = setup.split("\\r?\\n");
@@ -46,13 +47,13 @@ public class Sudoku extends Problem {
 		this.setSquare(square);
 	}
 	
-	@Override
 	/**
 	 * Gives all details parsed from the setup initial String as objects.
-	 * Usually used by (@link Representation)
+	 * Usually used by {@link Representation}
 	 * 
 	 * @returns Object[] size and square
 	 */
+	@Override
 	public Object[] getInfo() {
 		Object[] info = new Object[2];
 		info[0] = _size;
@@ -64,11 +65,13 @@ public class Sudoku extends Problem {
 	/*     OVERLOAD FUNCS      */
 	/* *********************** */
 
-	@Override
 	/**
 	 * All sudoku constraints are hard.
 	 * If not all are enforced (@link #setImplementedHard(int[] hard)
-	 * the solution will not be what's expected for the problem.
+	 * the solution will not be what's expected for the problem, but the user still has the choice.
+	 * TODO @todo add rules for magic sudokus?
+	 * 
+	 * @see Problem#setConstraints
 	 */
 	protected void setConstraints() {
 		super.setConstraints();
@@ -77,8 +80,9 @@ public class Sudoku extends Problem {
 		_constraints.add("Each n x n square must have all numbers 1-n^2");
 	}
 
-
-	@Override
+	/**
+	 * @see Problem#setObjectiveFunction
+	 */
 	protected void setObjectiveFunction() {
 		super.setObjectiveFunction();
 		_objectiveFunction = "Minimize hard constrains broken";
@@ -94,23 +98,24 @@ public class Sudoku extends Problem {
 	 * 
 	 * @see Sudoku#_size
 	 * @param size
+	 * @throws Exception
 	 */
-	protected void setSize(int size) {
+	protected void setSize(int size) throws Exception {
+		if (size == 0)
+			throw new Exception("Size is not valid");
+
 		_size = size;
 	}
 	
 	/**
-	 * Strip ".", replace any non digit with 0 for easier parsing on representations,
-	 * check that length is _size^2
+	 * TODO @todo: Strip ".", replace any non digit with 0 for easier parsing on representations,
+	 * TODO @todo: check that length is _size^2
 	 * 
 	 * @see Sudoku#_square
 	 * @param square
 	 * @throws Exception 
 	 */
 	protected void setSquare(String square) throws Exception {
-		if(_size == 0)
-			throw new Exception("Size is not valid");
-
 		_square = square;
 	}
 	

@@ -28,7 +28,10 @@ Maybe you need some context or info about a problem or algorithm. Go to the [doc
 
 # TODOs
 
-1. Add mvn for dependencies, or use ant(?)
-2. Add GUI to select P-R-A
-3. Implement tests
-4. Implement Template pattern instead of making classes abstract? https://en.wikipedia.org/wiki/Template_method_pattern
+0. Do the `TODOs` marked in code
+1. Add logger to output more details about everything (for now forcefully using sysout
+2. Add mvn for dependencies, or use ant(?)
+3. Add GUI to select P-R-A
+4. Implement tests
+5. Implement linters?
+6. Implement Template pattern instead of making classes abstract? https://en.wikipedia.org/wiki/Template_method_pattern

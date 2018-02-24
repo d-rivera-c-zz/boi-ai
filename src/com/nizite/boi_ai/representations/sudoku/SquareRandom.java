@@ -18,8 +18,20 @@ import com.nizite.boi_ai.utils.Parser;
  * @version 0.1
  */
 public class SquareRandom extends Representation {
+
+	/**
+	 * @see Sudoku#_size
+	 */
 	protected int _size;
+	
+	/**
+	 * @see Sudoku#_square
+	 */
 	protected String _square;
+	
+	/* *********************** */
+	/*      DEFINED FUNCS      */
+	/* *********************** */
 
 	@Override
 	public void setProblem(Object[] problem) throws Exception {
@@ -27,115 +39,20 @@ public class SquareRandom extends Representation {
 		_square = (String) problem[1];
 		_problem = this.dehumanize(_square);
 	}
-	
-	@Override
+
 	/**
-	 * There's really no objective function to enforce here 
-	 * other than minimize hard constrains
-	 */
-	protected void setObjectiveFunction() {
-		_objective = (Atom a) -> {
-			double totalScore = Math.pow(_size, 4) * 3;
-			return totalScore;
-		};
-	}
-	
-	@Override
-	public Atom blankAtom() {
-		return new Atom(new Integer[_size*_size][_size*_size]);
-	}
-
-	@Override
-	public Atom createAtom() {
-		Integer[][] newSquare = (Integer[][]) this.blankAtom().get();
-		Integer[][] problem = (Integer[][]) _problem.get();
-
-		// set all random
-		Random rn = new Random();
-		for (int i = 0; i < _size*_size; i++) {
-			for (int j = 0; j < _size*_size; j++) {
-				newSquare[i][j] = rn.nextInt(9) + 1;
-				
-				// replace matrix with items on _problem
-				if (problem[i][j] != null && problem[i][j] != 0) {
-					newSquare[i][j] = problem[i][j];
-				}
-			}
-		}
-		
-		// set fitness
-		Atom atom = new Atom(newSquare);
-		atom.setFitness(this.calculateFitness(atom));
-		
-		return atom;
-	}
-
-	@Override
-	/**
-	 * One line, separating each number by -
-	 * Will fill in with 1 if number is invalid
-	 */
-	public String atomToString(Atom atom) {
-		Integer[][] rep = (Integer[][]) atom.get();
-		String representation = "";
-		for (int i = 0; i < _size*_size; i++) {
-			for (int j = 0; j < _size*_size; j++) {
-				if (rep[i][j] != null) {
-					representation += Integer.toString(rep[i][j]) + Config.ATOM_SPLIT_CHAR;
-				} else {
-					representation += Config.ATOM_SPLIT_CHAR;
-				}
-			}
-		}
-		
-		// remove last "-"
-		representation = representation.substring(0, representation.length()-1);
-		
-		return representation;
-	}
-	
-
-	@Override
-	/**
-	 * Separated program-created string {@link Representation#stringToAtom} into pieces and
-	 * create an Atom out of it.
-	 * Any invalid value for sudoku (not natural numbers) are translated to null.
-	 */
-	public Atom stringToAtom(String rep) {
-		Integer[][] representation = (Integer[][]) this.blankAtom().get();
-		
-		String[] numbers = rep.split(Config.ATOM_SPLIT_CHAR);
-		for (int i = 0; i < _size*_size; i++) {
-			for (int j = 0; j < _size*_size; j++) {
-				try {
-					representation[i][j] = Parser.stringToInt(numbers[i*(_size*_size) + j]);
-				} catch (Exception e) {
-					representation[i][j] = null;
-				}
-			}
-		}
-
-		Atom repA = new Atom(representation);
-		repA.setFitness(this.calculateFitness(repA));
-		return repA;
-	}
-
-	@Override
-	public double calculateFitness(Atom atom) {
-		double totalScore = 0.0;
-		for(Lambda constraint : _hard) {
-			totalScore += constraint.calc(atom);
-		}
-		
-		return totalScore;
-	}
-	
-	/**
+	 * Defines functions per each constraint.
+	 * Adds "one point" per each constraint broken
+	 * 
 	 * TODO: filter by array
+	 * TODO @todo should add one point per constraint broken in general or should it stay in each representation?
+	 * 
+	 * @see Sudoku#setConstraints
+	 * @see Representation#setConstraints
 	 */
 	@Override
 	protected void setConstraints() {
-		super.setConstraints();
+		_constraints = new ArrayList<Lambda>();
 
 		// Each row must have all numbers 1-n^2
 		_constraints.add((Atom a) -> {
@@ -216,12 +133,124 @@ public class SquareRandom extends Representation {
 			return total;
 		});
 	}
-
-
+	
+	/**
+	 * There's really no objective function to enforce here 
+	 * other than minimize hard constraints, for which we penalize with 3 points for each hard constraint.
+	 * 
+	 * TODO @todo change this to take into consideration soft and hard constraints, with different penalizations
+	 * TODO @todo this is super not used... should be used instead of fitness?
+	 */
 	@Override
+	protected void setObjectiveFunction() {
+/*		_objective = (Atom a) -> {
+			double totalScore = Math.pow(_size, 4) * 3;
+			return totalScore;
+		};*/
+	}
+	
+	/**
+	 * Blank matrix the size of the full sudoku square
+	 */
+	@Override
+	public Atom blankAtom() {
+		return new Atom(new Integer[_size*_size][_size*_size]);
+	}
+
+	/**
+	 * Puts initial problem numbers in place and adds random numbers to all other blank spaces
+	 */
+	@Override
+	public Atom createAtom() {
+		Integer[][] newSquare = (Integer[][]) this.blankAtom().get();
+		Integer[][] problem = (Integer[][]) _problem.get();
+
+		// set all random
+		Random rn = new Random();
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
+				newSquare[i][j] = rn.nextInt(9) + 1;
+				
+				// replace matrix with items on _problem
+				if (problem[i][j] != null && problem[i][j] != 0) {
+					newSquare[i][j] = problem[i][j];
+				}
+			}
+		}
+		
+		// set fitness
+		Atom atom = new Atom(newSquare);
+		atom.setFitness(this.calculateFitness(atom));
+		
+		return atom;
+	}
+
+	/**
+	 * TODO @todo check what to do with objective func and this
+	 */
+	@Override
+	public double calculateFitness(Atom atom) {
+		double totalScore = 0.0;
+		for(Lambda constraint : _hard) {
+			totalScore += constraint.calc(atom);
+		}
+		
+		return totalScore;
+	}
+
+	/**
+	 * Separated program-created string {@link Representation#stringToAtom} into pieces and
+	 * create an Atom out of it.
+	 * Any invalid value for sudoku (not natural numbers) are translated to null.
+	 */
+	@Override
+	public Atom stringToAtom(String rep) {
+		Integer[][] representation = (Integer[][]) this.blankAtom().get();
+		
+		String[] numbers = rep.split(Config.ATOM_SPLIT_CHAR);
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
+				try {
+					representation[i][j] = Parser.stringToInt(numbers[i*(_size*_size) + j]);
+				} catch (Exception e) {
+					representation[i][j] = null;
+				}
+			}
+		}
+
+		Atom repA = new Atom(representation);
+		repA.setFitness(this.calculateFitness(repA));
+		return repA;
+	}
+
+	/**
+	 * One line, separating each number by -
+	 * Will leave empty if number is invalid
+	 */
+	@Override
+	public String atomToString(Atom atom) {
+		Integer[][] rep = (Integer[][]) atom.get();
+		String representation = "";
+		for (int i = 0; i < _size*_size; i++) {
+			for (int j = 0; j < _size*_size; j++) {
+				if (rep[i][j] != null) {
+					representation += Integer.toString(rep[i][j]) + Config.ATOM_SPLIT_CHAR;
+				} else {
+					representation += Config.ATOM_SPLIT_CHAR;
+				}
+			}
+		}
+		
+		// remove last "-"
+		representation = representation.substring(0, representation.length()-1);
+		
+		return representation;
+	}
+
 	/**
 	 * Converts the atom to a recognizable sudoku matrix separated by "-"  and "."
 	 */
+	@Override
 	public String humanize(Atom atom) {
 		Integer[][] rep = (Integer[][]) atom.get();
 		String representation = "";
@@ -286,13 +315,12 @@ public class SquareRandom extends Representation {
 		return states;
 	}
 
-
-	@Override
 	/**
 	 * Pick one random row,
 	 * pivot all numbers of the row,
 	 * don't pivot the ones in the problem
 	 */
+	@Override
 	public ArrayList<Atom> getNeighbors(Atom current) {
 		ArrayList<Atom> neighbors = new ArrayList<Atom>();
 		

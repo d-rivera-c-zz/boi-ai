@@ -6,25 +6,29 @@ import java.util.Random;
 import com.nizite.boi_ai.representations.Atom;
 import com.nizite.boi_ai.representations.Lambda;
 import com.nizite.boi_ai.representations.Representation;
-import com.nizite.boi_ai.utils.Parser;
 
 /**
  * Matrix of
  * 
+ * Nurse XX
  * day        1 | 2 | 3 | 4 | 5 | 6 | 7
  * shift 1
  * shift 2
  * shift 3
  * 
- * times x number of nurses.
+ * times x number of nurses available.
  * Boolean 0 1 if nurse is schedule to work that day and shift
  * 
  * @author d-rivera-c
+ * @version 0.1
  */
 public class MatrixRandom extends Representation {
 	protected int _days;
 	protected int _nurses;
 
+	/**
+	 * TODO @todo all other setup problem
+	 */
 	@Override
 	public void setProblem(Object[] problem) throws Exception {
 		_days = (int) problem[0];
@@ -33,20 +37,30 @@ public class MatrixRandom extends Representation {
 		// no dehuminize
 	}
 
-	@Override
 	/**
 	 * Minimize costs, that will mean minimize hard constraints broken.
 	 * We start with a max "cost" of 1 unit per nurse per shift
 	 */
+	@Override
 	protected void setObjectiveFunction() {
 		// TODO: I don't seem to be using this, delete?
 	}
 
+	/**
+	 * Blank atom is a 3d matrix with nothing pre-selected
+	 * 
+	 * @return Atom
+	 */
 	@Override
 	public Atom blankAtom() {
 		return new Atom(new Boolean[_nurses][_days][3]);
 	}
 
+	/**
+	 * Creates an atom with nurses randomly assigned to any shift
+	 * 
+	 * @return Atom
+	 */
 	@Override
 	public Atom createAtom() {
 		Boolean[][][] blank = (Boolean[][][]) this.blankAtom().get();
@@ -66,6 +80,11 @@ public class MatrixRandom extends Representation {
 		return atom;
 	}
 
+	/**
+	 * Calculates fitness taking into account the amount of hard constraints broken.
+	 * 
+	 * TODO @todo should consider soft constraints and objective function
+	 */
 	@Override
 	public double calculateFitness(Atom atom) {
 		double totalScore = 0.0;
@@ -78,11 +97,12 @@ public class MatrixRandom extends Representation {
 	}
 	
 	/**
-	 * TODO: filter by array
+	 * TODO @todo filter by array
+	 * TODO @todo consider configuration variables
 	 */
 	@Override
 	protected void setConstraints() {
-		super.setConstraints();
+		_constraints = new ArrayList<Lambda>();
 
 		// All shifts must have at least 3 nurses
 		_constraints.add((Atom a) -> {
@@ -110,18 +130,31 @@ public class MatrixRandom extends Representation {
 		});
 	}
 
+	/**
+	 * Will probably be useless in this case unless nurses' pre-established shifts can be added
+	 * 
+	 * TODO @todo consider this
+	 */
 	@Override
 	public Atom stringToAtom(String representation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Will probably be useless in this case unless nurses' pre-established shifts can be added
+	 * 
+	 * TODO @todo consider this
+	 */
 	@Override
 	public String atomToString(Atom atom) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Return a table for each nurse with their schedule
+	 */
 	@Override
 	public String humanize(Atom atom) {
 		Boolean[][][] rep = (Boolean[][][]) atom.get();
@@ -148,22 +181,31 @@ public class MatrixRandom extends Representation {
 		return representation;
 	}
 
+	/**
+	 * Will probably be useless in this case unless nurses' pre-established shifts can be added
+	 * 
+	 * TODO @todo consider this
+	 */
 	@Override
 	public Atom dehumanize(String rep) throws Exception {
 		return null;
 	}
 
+	/**
+	 * TODO @todo needed?
+	 */
 	@Override
 	protected ArrayList<String> getStates(String avoidSelf) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * TODO @todo needed
+	 */
 	@Override
 	public ArrayList<Atom> getNeighbors(Atom current) {
 		ArrayList<Atom> neighbors = new ArrayList<Atom>();
 		return neighbors;
 	}
-
-
 }

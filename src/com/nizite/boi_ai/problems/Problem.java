@@ -18,31 +18,37 @@ import com.nizite.boi_ai.utils.Parser;
 public abstract class Problem {
 	
 	/**
-	 * Hardcoded constraints.
+	 * Hardcoded constraints in plain text. 
+	 * 
+	 * The determination if a constraint is broken or not depends solely on representation 
+	 * (calculating if there's three nurses in a shift changes between a matrix and a linked list implementation). 
+	 * Therefore this is only a list of human readable strings, real work of calculation
+	 * will be done by {@link Representation#calculateFitness} and {@link Representation#setConstraints}.
+	 * 
 	 * Since soft/hard constraints can change depending on what is being analyzed, 
-	 * all constraints are put on the same list, and on program run can be selected.
-	 * Only a list of human readable string, real work of calculation
-	 * will be done by {@link Representation#calculateFitness(com.nizite.boi_ai.representations.Atom)}
+	 * all constraints are put on the same list, and on program run it can be selected which to enforce as hard 
+	 * or soft.
+	 * 
 	 */
 	protected List<String> _constraints;
 	
 	/**
 	 * Soft constraints to be enforced.
 	 * Set up in {@link Problem#config(String, String)}, picked by the user.
-	 * Follows the indexes set in {@link Problem#_soft}
+	 * Follows the indexes set in {@link Problem#_constraints}
 	 */
 	protected int[] _soft;
 	
 	/**
 	 * Hard constraints to be enforced.
 	 * Set up in {@link Problem#config(String, String)}, picked by the user.
-	 * Follows the indexes set in {@link Problem#_hard}
+	 * Follows the indexes set in {@link Problem#_constraints}
 	 */
 	protected int[] _hard;
 	
 	/**
 	 * Text-only explanation of what the objective function should do.
-	 * The actual implementation is tied to the representation.
+	 * The actual implementation is tied to the representation in {@link Representation#setObjectiveFunction}
 	 */
 	protected String _objectiveFunction;
 	
@@ -53,8 +59,8 @@ public abstract class Problem {
 	
 	/**
 	 * Receives a String read from a config file and parses it in its important parts (unique to each problem).
-	 * Saves in the unique variables all info needed.
-	 * Sets problem specific variables. Should be used to parse a String defining the whole problem and divide it into different variables. 
+	 * Sets problem specific variables. Should be used to parse a String defining the whole problem and divide 
+	 * it into different variables. 
 	 *
 	 * @param setup
 	 * @throws Exception 
@@ -64,7 +70,7 @@ public abstract class Problem {
 	
 	/**
 	 * The only way to get the problem's detail info after parsing and organizing the setup file.
-	 * It's up to Representation to organize this into an Atom to be handled within its class.
+	 * It's up to {@link Representation} to organize this into an Atom to be handled within its class.
 	 * 
 	 * @return Object[] with all the parsed info of the problem.
 	 */
@@ -147,6 +153,24 @@ public abstract class Problem {
 	}
 	
 	/**
+	 * Gets array of strings with the soft constraints that needs to be implemented as defined by the user.
+	 * 
+	 * TODO @todo clean this function
+	 * @return String[]
+	 */
+	public String[] getSoftConstraintsAsString() {
+		if (_soft == null || _soft.length == 0)
+			return (new String[0]);
+
+		String[] constraints = new String[_soft.length];
+		for (int i = 0; i < _soft.length; i++) {
+			constraints[i] = _constraints.get(_soft[i] - 1);
+		}
+		
+		return constraints;
+	}
+	
+	/**
 	 * @see Problem#_hard
 	 */
 	public int[] getHardConstraints() {
@@ -154,9 +178,27 @@ public abstract class Problem {
 	}
 	
 	/**
+	 * Gets array of strings with the hard constraints that needs to be implemented as defined by the user.
+	 * 
+	 * TODO @todo clean this function
+	 * @return String[]
+	 */
+	public String[] getHardConstraintsAsString() {
+		if (_hard == null || _hard.length == 0)
+			return (new String[0]);
+
+		String[] constraints = new String[_hard.length];
+		for (int i = 0; i < _hard.length; i++) {
+			constraints[i] = _constraints.get(_hard[i] - 1);
+		}
+		
+		return constraints;
+	}
+	
+	/**
 	 * @see Problem#_objectiveFunction
 	 */
 	public String getObjectiveFunction() {
-		return this._objectiveFunction;
+		return _objectiveFunction;
 	};
 }

@@ -9,11 +9,11 @@ import com.nizite.boi_ai.utils.Parser;
  * Assumption:
  *  - the week has 7 days
  *  - the day has three shifts
- * These can be made into variables later.
+ * TODO @todo These can be made into variables later.
  *
  * Variables: 
  *  - Time period (days)
- *  - Number of nurses
+ *  - Number of nurses available
  * 
  * Takes into account few constraints:
  *  - demand for each shift (how many nurses do we need in one shift)
@@ -25,10 +25,10 @@ import com.nizite.boi_ai.utils.Parser;
  *  - Isolated days of work or days off
  *  - Nurses preference
  *  - Minimum / maximum number of shifts assign to a nurse in a week 
- * While this constraints can be coded to accept variables, the first implementation of this will assume
+ * While these constraints can be coded to accept variables, the first implementation of this will assume
  * the variable elements of it will be hardcoded. Only a handful of this possible constraints are implemented here.
  * 
- * @todo unhardcode variable elements of constraints if there's a need to
+ * TODO @todo unhardcode variable elements of constraints if there's a need to
  * 
  * @author d-rivera-c
  * @version 0.1
@@ -36,7 +36,7 @@ import com.nizite.boi_ai.utils.Parser;
 public class NurseScheduling extends Problem {
 
 	protected int _days;
-	protected int _numberOfNurses;
+	protected int _numberOfNursesAvailable;
 
 	/* *********************** */
 	/*      DEFINED FUNCS      */
@@ -54,7 +54,7 @@ public class NurseScheduling extends Problem {
 	public Object[] getInfo() {
 		Object[] info = new Object[2];
 		info[0] = _days;
-		info[1] = _numberOfNurses;
+		info[1] = _numberOfNursesAvailable;
 		return info;
 	}
 	
@@ -96,6 +96,24 @@ public class NurseScheduling extends Problem {
 		if (numberOfNurses <= 0) {
 			throw new Exception("Invalid quantity of nurses available");
 		}
-		_numberOfNurses = numberOfNurses;
+		_numberOfNursesAvailable = numberOfNurses;
+	}
+	
+	/* *********************** */
+	/*        GETTERS          */
+	/* *********************** */
+	
+	/**
+	 * @see NurseScheduling#_days
+	 */
+	public int getDays() {
+		return _days;
+	}
+
+	/**
+	 * @see NurseScheduling#_numberOfNursesAvailable
+	 */
+	public int getNumberOfNursesAvailable() {
+		return _numberOfNursesAvailable;
 	}
 }

@@ -2,7 +2,7 @@ package com.nizite.boi_ai.representations;
 
 /**
  * Every Representation will know how to deal with its atoms
- * It can be a matrix or an object or a list, etc. Pertinent to each Rep
+ * It can be a matrix or an object or a list, etc. Pertinent to each Rep.
  * Since fitness calculation depends on each Rep, that's not done here,
  * this is only used for storage
  * 
