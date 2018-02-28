@@ -15,6 +15,10 @@ import com.nizite.boi_ai.representations.Atom;
  */
 public class SquareValidRows extends SquareRandom {
 
+	/**
+	 * Sudoku matrix has valid rows (therefore motivating a constraint to be always valid, but doesn't care
+	 * if it's cofigured by the user to be enforced).
+	 */
 	@Override
 	public Atom createAtom() {
 		Integer[][] newSquare = (Integer[][]) this.blankAtom().get();

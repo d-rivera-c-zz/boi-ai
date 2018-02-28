@@ -105,7 +105,11 @@ public abstract class Representation {
 	public abstract Atom createAtom();
 	
 	/**
-	 * Calculate fitness of an atom based on the objective function defined
+	 * Calculate fitness of an atom based on the objective function defined.
+	 * The term "fitness" is borrowed from genetic algorithms, since "result of objective function" didn't
+	 * sound catchy enough. The idea is that the result of the objective function for an {@link Atom} or 
+	 * {@link Representation} is stored and it will determine how "fit" or "closer to the objective" a solution is.
+	 * The closer the result is to zero, the more "fit" the solution is.
 	 * 
 	 * @param atom Atom
 	 * @return double
@@ -156,12 +160,12 @@ public abstract class Representation {
 	/**
 	 * Gets all states a bit (that is, a cell in the representation) can have.
 	 * All sanitization and generic processing are called in {@link Representation#getAllowedStates}.
+	 * TODO @todo should maybe be ints instead of strings? the atom representation would probably be in 
+	 * ints or booleans anyway...
 	 * 
-	 * @param avoidSelf if set removes element from the list so it can't be picked again,
-	 *        it will not be enforced if we are left with an empty list after removing self
 	 * @return ArrayList<String> states
 	 */
-	protected abstract ArrayList<String> getStates(String avoidSelf);
+	protected abstract ArrayList<String> getStates();
 	
 	/**
 	 * Finds all neighbors of a solution.
@@ -196,7 +200,7 @@ public abstract class Representation {
 	 * @return List<String> with all possible states.
 	 */
 	public ArrayList<String> getAllowedStates(String avoidSelf) {
-		ArrayList<String> states = this.getStates(avoidSelf);
+		ArrayList<String> states = this.getStates();
 		
 		if (avoidSelf != null) {
 			while(states.remove(avoidSelf));

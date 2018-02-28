@@ -36,6 +36,42 @@ public class MatrixRandom extends Representation {
 		// no initial representation of problem to start with
 		// no dehuminize
 	}
+	
+	
+	/**
+	 * TODO @todo filter by array
+	 * TODO @todo consider configuration variables
+	 */
+	@Override
+	protected void setConstraints() {
+		_constraints = new ArrayList<Lambda>();
+
+		// All shifts must have at least 3 nurses
+		_constraints.add((Atom a) -> {
+			double total = 0.0;
+			int subtotal = 0;
+			Boolean[][][] matrix = (Boolean[][][]) a.get();
+			
+			for (int i = 0; i < _days; i++) {
+				for (int j = 0; j < 3; j++) {
+					for (int k = 0; k < _nurses; k++) {
+						if (matrix[k][i][j]) {
+							subtotal++;
+						}
+					}
+					
+					// add one for each shift with less than 3 nurses
+					if (subtotal < 3) {
+						total++;
+					}
+					subtotal = 0;
+				}
+			}
+			
+			return total;
+		});
+	}
+
 
 	/**
 	 * Minimize costs, that will mean minimize hard constraints broken.
@@ -94,40 +130,6 @@ public class MatrixRandom extends Representation {
 		}
 		
 		return totalScore;
-	}
-	
-	/**
-	 * TODO @todo filter by array
-	 * TODO @todo consider configuration variables
-	 */
-	@Override
-	protected void setConstraints() {
-		_constraints = new ArrayList<Lambda>();
-
-		// All shifts must have at least 3 nurses
-		_constraints.add((Atom a) -> {
-			double total = 0.0;
-			int subtotal = 0;
-			Boolean[][][] matrix = (Boolean[][][]) a.get();
-			
-			for (int i = 0; i < _days; i++) {
-				for (int j = 0; j < 3; j++) {
-					for (int k = 0; k < _nurses; k++) {
-						if (matrix[k][i][j]) {
-							subtotal++;
-						}
-					}
-					
-					// add one for each shift with less than 3 nurses
-					if (subtotal < 3) {
-						total++;
-					}
-					subtotal = 0;
-				}
-			}
-			
-			return total;
-		});
 	}
 
 	/**
@@ -195,7 +197,7 @@ public class MatrixRandom extends Representation {
 	 * TODO @todo needed?
 	 */
 	@Override
-	protected ArrayList<String> getStates(String avoidSelf) {
+	protected ArrayList<String> getStates() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -29,8 +29,8 @@ Maybe you need some context or info about a problem or algorithm. Go to the [doc
 # TODOs
 
 0. Do the `TODOs` marked in code
-1. Add logger to output more details about everything (for now forcefully using sysout
 2. Add mvn for dependencies, or use ant(?)
+1. Add logger to output more details about everything (for now forcefully using sysout)
 3. Add GUI to select P-R-A
 4. Implement tests
 5. Implement linters?

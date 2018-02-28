@@ -143,10 +143,14 @@ public class SquareRandom extends Representation {
 	 */
 	@Override
 	protected void setObjectiveFunction() {
-/*		_objective = (Atom a) -> {
-			double totalScore = Math.pow(_size, 4) * 3;
+		_objective = (Atom a) -> {
+			double totalScore = 0.0;
+			for(Lambda constraint : _hard) {
+				totalScore += constraint.calc(a);
+			}
+			
 			return totalScore;
-		};*/
+		};
 	}
 	
 	/**
@@ -186,16 +190,11 @@ public class SquareRandom extends Representation {
 	}
 
 	/**
-	 * TODO @todo check what to do with objective func and this
+	 * TODO @todo move this to parent Representation
 	 */
 	@Override
 	public double calculateFitness(Atom atom) {
-		double totalScore = 0.0;
-		for(Lambda constraint : _hard) {
-			totalScore += constraint.calc(atom);
-		}
-		
-		return totalScore;
+		return _objective.calc(atom);
 	}
 
 	/**
@@ -231,6 +230,7 @@ public class SquareRandom extends Representation {
 	public String atomToString(Atom atom) {
 		Integer[][] rep = (Integer[][]) atom.get();
 		String representation = "";
+		
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = 0; j < _size*_size; j++) {
 				if (rep[i][j] != null) {
@@ -254,6 +254,7 @@ public class SquareRandom extends Representation {
 	public String humanize(Atom atom) {
 		Integer[][] rep = (Integer[][]) atom.get();
 		String representation = "";
+		
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = 0; j < _size*_size; j++) {
 				representation += Parser.integerToString(rep[i][j]);
@@ -276,6 +277,11 @@ public class SquareRandom extends Representation {
 		return representation;
 	}
 
+	/**
+	 * Breaks down a sudoku matrix to a string the program can read.
+	 * 
+	 * TODO @todo more validations
+	 */
 	@Override
 	public Atom dehumanize(String rep) throws Exception {
 		String atom = "";
@@ -303,12 +309,15 @@ public class SquareRandom extends Representation {
 		return atomObject;
 	}
 
+	/**
+	 * All numbers that are allowed in a sudoku cell.
+	 */
 	@Override
-	protected ArrayList<String> getStates(String avoidSelf) {
+	protected ArrayList<String> getStates() {
 		ArrayList<String> states = new ArrayList<String>();
 		
 		// all numbers from 1 to n^2 are allowed
-		for(int i = 1; i <= _size * _size; i++) {
+		for(int i = 1; i <= _size*_size; i++) {
 			states.add(Integer.toString(i));
 		}
 
@@ -319,25 +328,30 @@ public class SquareRandom extends Representation {
 	 * Pick one random row,
 	 * pivot all numbers of the row,
 	 * don't pivot the ones in the problem
+	 * 
+	 * TODO @todo make this less complex
+	 * TODO @todo check if it's right
 	 */
 	@Override
 	public ArrayList<Atom> getNeighbors(Atom current) {
 		ArrayList<Atom> neighbors = new ArrayList<Atom>();
 		
-		Random rn = new Random();
-		int row = rn.nextInt(_size*_size);
 		Integer[][] toPivot = (Integer[][]) current.get();
 		Integer[][] problem = (Integer[][]) _problem.get();
+		
+		// select a random row to pivot its numbers
+		Random rn = new Random();
+		int row = rn.nextInt(_size*_size);
 
 		for (int i = 0; i < _size*_size; i++) {
 			for (int j = i; j < _size*_size; j++) {
-				// if [i][j] has number, don't move it
+				// if [i][j] has number, don't move it since is part of the problem
 				if (problem[row][i] != null || problem[row][j] != null)
 					continue;
 				
 				//copy
 				Integer[][] copy = (Integer[][]) this.blankAtom().get();
-				for(int k = 0; k < toPivot.length; k++)
+				for (int k = 0; k < toPivot.length; k++)
 					  for(int l = 0; l < toPivot[k].length; l++)
 					    copy[k][l] = toPivot[k][l];
 
