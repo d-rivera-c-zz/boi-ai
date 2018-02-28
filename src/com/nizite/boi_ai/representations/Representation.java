@@ -250,6 +250,7 @@ public abstract class Representation {
 	
 	/**
 	 * Getter for {@link Representation#_problem}
+	 * 
 	 * @return Atom problem
 	 */
 	public Atom getProblem() {

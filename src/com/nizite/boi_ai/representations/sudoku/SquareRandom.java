@@ -20,12 +20,12 @@ import com.nizite.boi_ai.utils.Parser;
 public class SquareRandom extends Representation {
 
 	/**
-	 * @see Sudoku#_size
+	 * @see com.nizite.boi_ai.problems.sudoku.Sudoku#_size
 	 */
 	protected int _size;
 	
 	/**
-	 * @see Sudoku#_square
+	 * @see com.nizite.boi_ai.problems.sudoku.Sudoku#_square
 	 */
 	protected String _square;
 	
@@ -47,7 +47,7 @@ public class SquareRandom extends Representation {
 	 * TODO: filter by array
 	 * TODO @todo should add one point per constraint broken in general or should it stay in each representation?
 	 * 
-	 * @see Sudoku#setConstraints
+	 * @see com.nizite.boi_ai.problems.sudoku.Sudoku#setConstraints
 	 * @see Representation#setConstraints
 	 */
 	@Override

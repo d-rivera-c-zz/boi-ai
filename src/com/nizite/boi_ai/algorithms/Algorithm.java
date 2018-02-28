@@ -13,14 +13,15 @@ import com.nizite.boi_ai.representations.Representation;
 public abstract class Algorithm {
 	/**
 	 * Number of iterations to run.
-	 * Normally if this is set, the _time variable will not be set
+	 * Normally if this is set, the {@link Algorithm#_time} variable will not be set
 	 */
 	protected Integer _iterations;
 	
 	/**
 	 * Time limit to run the iterations.
-	 * Normally if this is set, the _iterations variable will not be set
-	 * TODO this
+	 * Normally if this is set, the {@link Algorithm#_iterations} variable will not be set
+	 * 
+	 * TODO @todo this
 	 */
 	protected Integer _time;
 	
@@ -51,6 +52,7 @@ public abstract class Algorithm {
 	/**
 	 * Handles algorithm pertinent setup, like percentage of mutations or 
 	 * number of individuals, length of list, etc
+	 * 
 	 * @param setup
 	 */
 	public abstract void setup(Object... setup);
@@ -66,8 +68,9 @@ public abstract class Algorithm {
 	
 	/**
 	 * Configuration used by all algorithms.
-	 * If more that one is set (example: time and iterations), then whichever is reached first will be the stop criteria
+	 * If more than one is set (example: time and iterations), then whichever is reached first will be the stop criteria
 	 * TODO @todo So far only cares about stop criteria
+	 * 
 	 * @param iterations
 	 * @param time
 	 * @param explorationBP
@@ -80,19 +83,25 @@ public abstract class Algorithm {
 	
 	/**
 	 * Runs the loops until time or number of loops is reached
-	 * TODO time stop
+	 * TODO @todo time stop, exploration breakpoint stop
 	 */
 	public void run() {
-		for(int i = 0; i < this._iterations; i++) {
+		for (int i = 0; i < _iterations; i++) {
 			this.iteration();
 			
-			//TODO change for logger
-			if(i%1000 == 0)
+			//TODO @todo change for logger
+			if (i%1000 == 0)
 				System.out.println("Iteration "+i);
 		}
 	};
 	
+	/* *********************** */
+	/*        SETTERS          */
+	/* *********************** */
+	
 	/**
+	 * TODO @todo validate that representation is valid (not null)
+	 * 
 	 * @see Algorithm#_representation
 	 */
 	public void setRepresentation(Representation representation) {
@@ -101,11 +110,16 @@ public abstract class Algorithm {
 	
 	/**
 	 * @see Algorithm#_bestSolution
+	 * 
 	 * @param best
 	 */
 	protected void setBestSolution(Atom best) {
 		_bestSolution = best;
 	};
+	
+	/* *********************** */
+	/*        GETTERS          */
+	/* *********************** */
 	
 	/**
 	 * @see Algorithm#_bestSolution
@@ -117,8 +131,10 @@ public abstract class Algorithm {
 	
 	/**
 	 * Calculates stats, like time taken to run, number of loops, 
-	 * improvements in best solutions
-	 * TODO this
+	 * improvements in best solutions.
+	 * Used for statistics and comparition purposes.
+	 * 
+	 * TODO @todo this
 	 * 
 	 * @return String
 	 */

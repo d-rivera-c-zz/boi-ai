@@ -14,30 +14,42 @@ import com.nizite.boi_ai.representations.Atom;
  * @version 0.1
  */
 public class Tabu extends Algorithm {
-
-	protected LinkedList<Atom> _tabu;
+	/**
+	 * The size of the tabu list
+	 */
 	protected int _tabuSize;
+	
+	/**
+	 * Saved tabu list to avoid next time. The size should be {@link Tabu#_tabuSize}
+	 */
+	protected LinkedList<Atom> _tabu;
+	
+	/**
+	 * Current solution from which we'll get neighbors
+	 */
 	protected Atom _currentSolution;
 	
+	/* *********************** */
+	/*      DEFINED FUNCS      */
+	/* *********************** */
+	
+	/**
+	 * Start an empty tabu list the size determined by the user
+	 */
 	@Override
 	public void setup(Object... setup) {
 		_tabu = new LinkedList<Atom>();
 		_tabuSize = (int) setup[0];
 	}
-	
-	public void run() {
-		// put a random solution as the best one to have something to compare
-		_bestSolution = _representation.createAtom();
-		_currentSolution = _bestSolution;
-		super.run();
-	}
 
-	@Override
 	/**
-	 * Update tabu list with current solution as to not use it again
+	 * Update tabu list with current solution as to not use it again.
 	 * Find neighbors and select best solution, but remove the solutions already in tabu list.
 	 * If the current solution is better than the best solution, save it.
+	 * 
+	 * TODO @todo check if this is implemented right
 	 */
+	@Override
 	protected void iteration() {
 		ArrayList<Atom> neighbors = _representation.getNeighbors(_currentSolution);
 		
@@ -58,14 +70,14 @@ public class Tabu extends Algorithm {
 		}
 		
 		Atom bestLocalSolution = null;
-		//if no neighbors, explore and create a random atom
+		// if no neighbors, explore and create a random atom
 		if (neighbors.size() == 0)
 			bestLocalSolution = _representation.createAtom();
 		else
 			bestLocalSolution = neighbors.get(0);
 		
+		// find the best local solutions of neigh list
 		for (int i = 0; i < neighbors.size(); i++) {
-			// find the best local solutions of neigh list
 			if (bestLocalSolution.getFitness() > neighbors.get(i).getFitness())
 				bestLocalSolution = neighbors.get(i);
 		}
@@ -74,5 +86,18 @@ public class Tabu extends Algorithm {
 		// if current solution is better than the overall solution, update
 		if (_currentSolution.getFitness() < _bestSolution.getFitness())
 			_bestSolution = _currentSolution;
+	}
+	
+	/* *********************** */
+	/*     OVERLOAD FUNCS      */
+	/* *********************** */
+	
+	/**
+	 * Put a random solution as the best one to have something to compare
+	 */
+	public void run() {
+		_bestSolution = _representation.createAtom();
+		_currentSolution = _bestSolution;
+		super.run();
 	}
 }

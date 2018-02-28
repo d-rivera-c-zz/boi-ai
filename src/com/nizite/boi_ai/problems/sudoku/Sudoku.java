@@ -29,7 +29,7 @@ public class Sudoku extends Problem {
 
 	/**
 	 * Parses the String problem and also sets it in the representation
-	 * @todo: compress every exception into exception to bubble it up
+	 * TODO @todo: compress every exception into exception to bubble it up
 	 * 
 	 * @param setup String
 	 */
@@ -49,9 +49,9 @@ public class Sudoku extends Problem {
 	
 	/**
 	 * Gives all details parsed from the setup initial String as objects.
-	 * Usually used by {@link Representation}
+	 * Usually used by {@link com.nizite.boi_ai.representations.Representation}
 	 * 
-	 * @returns Object[] size and square
+	 * @return Object[] size and square
 	 */
 	@Override
 	public Object[] getInfo() {

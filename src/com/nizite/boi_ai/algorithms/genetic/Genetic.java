@@ -7,54 +7,80 @@ import com.nizite.boi_ai.Config;
 import com.nizite.boi_ai.algorithms.Algorithm;
 import com.nizite.boi_ai.representations.Atom;
 
-//rulete wheel
-// one point mutation
+/**
+ * Genetic algorithm implementation.
+ * Uses rulette wheel for selection and one point mutation.
+ * 
+ * @author d-rivera-c
+ * @version 0.1
+ */
 public class Genetic extends Algorithm {
+	/**
+	 * Size of the population to handle.
+	 * The bigger the population, the more space to explore, but is more expensive to handle.
+	 */
 	private int _populationSize;
 	
-	// TODO: doubles should be 0-1
-	private double _mutation;
-	private double _crossover;
-	
+	/**
+	 * Actual population, size of the array should be {@link Genetic#_populationSize}
+	 */
 	private Atom[] _population;
+	
+	/**
+	 * TODO @todo should be between 0 and 1
+	 */
+	private double _mutation;
+	
+	/**
+	 * TODO @todo should be between 0 and 1
+	 */
+	private double _crossover;
 
+	/* *********************** */
+	/*      DEFINED FUNCS      */
+	/* *********************** */
+	
+	/**
+	 * TODO @todo validate correct value of vars
+	 */
 	@Override
 	public void setup(Object... setup) {
-		this._populationSize = (int) setup[0];
-		this._population = new Atom[this._populationSize];
-		this._mutation = (double) setup[1];
-		this._crossover = (double) setup[2];
+		_populationSize = (int) setup[0];
+		_population = new Atom[_populationSize];
+		_mutation = (double) setup[1];
+		_crossover = (double) setup[2];
 	}
 	
-	public void run() {
-		this.initialPopulation();
-		super.run();
-	}
-	
+	/**
+	 * Creates a new population based on the old one, mutating and crossing
+	 */
 	@Override
 	protected void iteration() {
 		Atom[] newPopulation = new Atom[_populationSize];
 		double sumFitness = 0;
-		for(int i = 0; i < this._populationSize; i++) {
+		
+		// sum all fitness and get the best solution so far
+		for (int i = 0; i < _populationSize; i++) {
 			// selection
 			sumFitness += _population[i].getFitness();
 
-			//best solution
+			//best solution, the smaller the better
 			if (_population[i].getFitness() < _bestSolution.getFitness()) {
 				_bestSolution = _population[i];
 			}
 		}
 		
+		// TODO @todo check this, not sure if this calculation is done right
 		double secondFitness = 0.0;
-		for(int i = 0; i < _populationSize; i++) {
+		for (int i = 0; i < _populationSize; i++) {
 			secondFitness += 1 - (_population[i].getFitness() / sumFitness);
 		}
 		
 		Random rn = new Random();
-		for(int i = 0; i < _populationSize; i++) {
+		for (int i = 0; i < _populationSize; i++) {
 			double random = rn.nextDouble();
 			double previousFit = 0.0;
-			for(int j = 0; j < _populationSize; j++) {
+			for (int j = 0; j < _populationSize; j++) {
 				previousFit += (1 - _population[j].getFitness() / sumFitness) / secondFitness;
 				if (random <= previousFit) {
 					newPopulation[i] = _population[j];
@@ -73,20 +99,42 @@ public class Genetic extends Algorithm {
 		this.mutation();
 	}
 	
+	/* *********************** */
+	/*     OVERLOAD FUNCS      */
+	/* *********************** */
+	
+	/**
+	 * Create initial population and then run as usual.
+	 */
+	public void run() {
+		this.initialPopulation();
+		super.run();
+	}
+	
+	/* *********************** */
+	/* PROBLEM PERTINENT FUNCS */
+	/* *********************** */
 
+	/**
+	 * Create a random new atom and set it as best solution, then create all other initial
+	 * atoms for the initial population.
+	 */
 	private void initialPopulation() {
 		_bestSolution = _representation.createAtom();
-		for (int i = 0; i < this._populationSize; i++) {
-			this._population[i] = _representation.createAtom();
+		for (int i = 0; i < _populationSize; i++) {
+			_population[i] = _representation.createAtom();
 		}
 	}
 	
+	/**
+	 * TODO @todo check this
+	 */
 	private void crossover() {
 		ArrayList<Atom> newPop = new ArrayList<Atom>();
 		Random rn = new Random();
 		
 		Atom parent1 = null;
-		for(int i = 0; i < _populationSize; i++) {
+		for (int i = 0; i < _populationSize; i++) {
 			if (rn.nextDouble() <= _crossover) {
 				if (parent1 == null) {
 					parent1 = _population[i];
@@ -129,7 +177,7 @@ public class Genetic extends Algorithm {
 	}
 	
 	/**
-	 * 
+	 * TODO @todo check this
 	 */
 	private void mutation() {
 		Random rn = new Random();
