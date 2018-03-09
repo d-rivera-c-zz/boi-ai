@@ -11,6 +11,9 @@ This code is meant to be played with, so it doesn't have a visual interface and 
 ### Installation
 Just download the project or make a clone of it.
 
+### Dependencies
+Since there's not many dependencies, the libraries used are commited to the repo. It's in the TODO list to change that eventually.
+
 ### How to run it
 For now the options are Eclipse or Ant.
 
@@ -21,13 +24,13 @@ Import the root folder `boi-ai`, make `src` the `Source folder`, add `jre` as a 
 ###### Ant
 - `ant` to compile sources and create docs
 - `ant run` to run the program
-- `ant test` to test (once there are real tests in place
+- `ant test` to test (once there are real tests in place)
 
 # Docs
 Maybe you need some context or info about a problem or algorithm. Go to the [docs folder](docs/en/index.md) :)
 
 #TODO
 
-1. Add mvn for dependencies, or use ant(?)
+1. Add mvn/ivy/Gradle for dependencies.
 2. Add GUI to select P-R-A
 3. Implement tests

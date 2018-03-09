@@ -4,7 +4,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar  #commenting while dependencies are not managed by buildtool
 *.war
 *.ear
 
