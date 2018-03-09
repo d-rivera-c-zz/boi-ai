@@ -33,19 +33,42 @@ public class SquareRandom extends Representation {
 	/*      DEFINED FUNCS      */
 	/* *********************** */
 
+	/**
+	 * TODO @todo: check that length is _size^2
+	 */
 	@Override
 	public void setProblem(Object[] problem) throws Exception {
 		_size = (int) problem[0];
 		_square = (String) problem[1];
 		_problem = this.dehumanize(_square);
 	}
-
+	
+	/**
+	 * There's really no objective function to enforce here 
+	 * other than minimize hard/soft constraints, for which we penalize with 3 points for each hard constraint 
+	 * and one for each soft constraint.
+	 */
+	@Override
+	protected void setObjectiveFunction() {
+		_objective = (Atom a) -> {
+			double totalScore = 0.0;
+			for (Lambda constraint : _hard) {
+				totalScore += 3 * constraint.calc(a);
+			}
+			for (Lambda constraint : _soft) {
+				totalScore += constraint.calc(a);
+			}
+			
+			return totalScore;
+		};
+	}
+	
 	/**
 	 * Defines functions per each constraint.
-	 * Adds "one point" per each constraint broken
+	 * Adds "one point" per each constraint broken, up to each representation to add "weight" to hard and 
+	 * soft constraints, or to handle constraints broken any other way.
 	 * 
-	 * TODO: filter by array
-	 * TODO @todo should add one point per constraint broken in general or should it stay in each representation?
+	 * TODO @todo filter by array
 	 * 
 	 * @see com.nizite.boi_ai.problems.sudoku.Sudoku#setConstraints
 	 * @see Representation#setConstraints
@@ -132,25 +155,6 @@ public class SquareRandom extends Representation {
 			
 			return total;
 		});
-	}
-	
-	/**
-	 * There's really no objective function to enforce here 
-	 * other than minimize hard constraints, for which we penalize with 3 points for each hard constraint.
-	 * 
-	 * TODO @todo change this to take into consideration soft and hard constraints, with different penalizations
-	 * TODO @todo this is super not used... should be used instead of fitness?
-	 */
-	@Override
-	protected void setObjectiveFunction() {
-		_objective = (Atom a) -> {
-			double totalScore = 0.0;
-			for(Lambda constraint : _hard) {
-				totalScore += constraint.calc(a);
-			}
-			
-			return totalScore;
-		};
 	}
 	
 	/**

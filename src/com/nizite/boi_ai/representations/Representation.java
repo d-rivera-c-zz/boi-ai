@@ -70,13 +70,6 @@ public abstract class Representation {
 	public abstract void setProblem(Object[] problem) throws Exception;
 
 	/**
-	 * Defines the functions to calculate if a constraint is broken or not
-	 * 
-	 * @see Representation#_constraints
-	 */
-	protected abstract void setConstraints();
-
-	/**
 	 * Defines function to calculate the objective function value.
 	 * To be able to make this whole project more reusable, the general goal for everything should be to 
 	 * minimize this function (consider it a cost function).
@@ -86,6 +79,13 @@ public abstract class Representation {
 	 * @see Representation#_objective
 	 */
 	protected abstract void setObjectiveFunction();
+	
+	/**
+	 * Defines the functions to calculate if a constraint is broken or not
+	 * 
+	 * @see Representation#_constraints
+	 */
+	protected abstract void setConstraints();
 	
 	/**
 	 * Creates a blank representation of an atom.

@@ -43,22 +43,17 @@ public class Tabu extends Algorithm {
 	}
 
 	/**
-	 * Update tabu list with current solution as to not use it again.
 	 * Find neighbors and select best solution, but remove the solutions already in tabu list.
+	 * If there's no neighbors available after removing tabu list, create new atom (this is not part of the 
+	 * common implementation of Tabu Search).
 	 * If the current solution is better than the best solution, save it.
-	 * 
-	 * TODO @todo check if this is implemented right
+	 * Update tabu list with current solution as to not use it again.
 	 */
 	@Override
 	protected void iteration() {
 		ArrayList<Atom> neighbors = _representation.getNeighbors(_currentSolution);
 		
-		// update tabu
-		_tabu.add(_currentSolution);
-		while (_tabu.size() > _tabuSize)
-			_tabu.removeFirst();
-		
-		// remove tabu list == neighbors
+		// remove neighbors already in the tabu list
 		for (int i = 0; i < neighbors.size(); i++) {
 			for (int j = 0; j < _tabu.size(); j++) {
 				if (_representation.atomToString(neighbors.get(i)).equals(
@@ -76,9 +71,10 @@ public class Tabu extends Algorithm {
 		else
 			bestLocalSolution = neighbors.get(0);
 		
-		// find the best local solutions of neigh list
+		// find the best local solutions of neighbors list
+		// the goal is minimizing the value
 		for (int i = 0; i < neighbors.size(); i++) {
-			if (bestLocalSolution.getFitness() > neighbors.get(i).getFitness())
+			if (neighbors.get(i).getFitness() < bestLocalSolution.getFitness())
 				bestLocalSolution = neighbors.get(i);
 		}
 		_currentSolution = bestLocalSolution;
@@ -86,6 +82,12 @@ public class Tabu extends Algorithm {
 		// if current solution is better than the overall solution, update
 		if (_currentSolution.getFitness() < _bestSolution.getFitness())
 			_bestSolution = _currentSolution;
+		
+		// update tabu with current solution
+		// shouldn't be bigger than the _tabuSize determined by the user
+		_tabu.add(_currentSolution);
+		while (_tabu.size() > _tabuSize)
+			_tabu.removeFirst();
 	}
 	
 	/* *********************** */

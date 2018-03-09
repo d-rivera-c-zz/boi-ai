@@ -64,7 +64,15 @@ public class Sudoku extends Problem {
 	/* *********************** */
 	/*     OVERLOAD FUNCS      */
 	/* *********************** */
-
+	
+	/**
+	 * @see Problem#setObjectiveFunction
+	 */
+	protected void setObjectiveFunction() {
+		super.setObjectiveFunction();
+		_objectiveFunction = "Minimize hard constrains broken";
+	}
+	
 	/**
 	 * All sudoku constraints are hard.
 	 * If not all are enforced (@link #setImplementedHard(int[] hard)
@@ -78,14 +86,6 @@ public class Sudoku extends Problem {
 		_constraints.add("Each row must have all numbers 1-n^2");
 		_constraints.add("Each column must have all numbers 1-n^2");
 		_constraints.add("Each n x n square must have all numbers 1-n^2");
-	}
-
-	/**
-	 * @see Problem#setObjectiveFunction
-	 */
-	protected void setObjectiveFunction() {
-		super.setObjectiveFunction();
-		_objectiveFunction = "Minimize hard constrains broken";
 	}
 
 	/* *********************** */
@@ -109,7 +109,6 @@ public class Sudoku extends Problem {
 	
 	/**
 	 * TODO @todo: Strip ".", replace any non digit with 0 for easier parsing on representations,
-	 * TODO @todo: check that length is _size^2
 	 * 
 	 * @see Sudoku#_square
 	 * @param square

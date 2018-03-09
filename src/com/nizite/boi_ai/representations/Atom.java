@@ -26,6 +26,8 @@ public class Atom {
 		_atom = atom;
 	};
 	
+	// TODO @todo probably makes sense to rename this since "fitness" implies that the bigger the better,
+	// but we are usually trying to minimize the value of the objective function
 	public Double getFitness() {
 		return _fitness;
 	}
@@ -33,4 +35,6 @@ public class Atom {
 	public void setFitness(double fitness) {
 		_fitness = fitness;
 	}
+	
+	// TODO @todo would maybe benefit of having a compare function inside the Atom structure
 }

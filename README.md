@@ -32,9 +32,10 @@ Maybe you need some context or info about a problem or algorithm. Go to the [doc
 # TODOs
 
 0. Do the `TODOs` marked in code
-2. Add mvn/ivy/Gradle for dependencies.
-1. Add logger to output more details about everything (for now forcefully using sysout)
-3. Add GUI to select P-R-A
-4. Implement tests
+1. Add mvn/ivy/Gradle for dependencies.
+2. Add unit tests to everything
+3. Add logger to output more details about everything (for now forcefully using sysout)
+4. Add GUI to select P-R-A
 5. Implement linters?
 6. Implement Template pattern instead of making classes abstract? https://en.wikipedia.org/wiki/Template_method_pattern
+7. Consider changing Atom String to Atom Boolean as a default representation

@@ -103,6 +103,13 @@ public abstract class Problem {
 	/* *********************** */
 	
 	/**
+	 * Initializes text-only objective function as empty string
+	 */
+	protected void setObjectiveFunction() {
+		_objectiveFunction = "";
+	};
+	
+	/**
 	 * Initialized {@link Problem#_constraints} as an empty list
 	 */
 	protected void setConstraints() {
@@ -126,13 +133,6 @@ public abstract class Problem {
 	protected void setHardConstraints(String hard) {
 		_hard = Parser.stringToIntArray(hard);
 	}
-
-	/**
-	 * Initializes text-only objective function as empty string
-	 */
-	protected void setObjectiveFunction() {
-		_objectiveFunction = "";
-	};
 	
 	/* *********************** */
 	/*        GETTERS          */
@@ -155,7 +155,6 @@ public abstract class Problem {
 	/**
 	 * Gets array of strings with the soft constraints that needs to be implemented as defined by the user.
 	 * 
-	 * TODO @todo clean this function
 	 * @return String[]
 	 */
 	public String[] getSoftConstraintsAsString() {
@@ -180,7 +179,6 @@ public abstract class Problem {
 	/**
 	 * Gets array of strings with the hard constraints that needs to be implemented as defined by the user.
 	 * 
-	 * TODO @todo clean this function
 	 * @return String[]
 	 */
 	public String[] getHardConstraintsAsString() {

@@ -54,8 +54,9 @@ public abstract class Algorithm {
 	 * number of individuals, length of list, etc
 	 * 
 	 * @param setup
+	 * @throws Exception 
 	 */
-	public abstract void setup(Object... setup);
+	public abstract void setup(Object... setup) throws Exception;
 	
 	/**
 	 * How one loop of an iteration should be handled
@@ -100,11 +101,15 @@ public abstract class Algorithm {
 	/* *********************** */
 	
 	/**
-	 * TODO @todo validate that representation is valid (not null)
+	 * Validates that representation is valid (not null)
 	 * 
 	 * @see Algorithm#_representation
+	 * @throws Exception 
 	 */
-	public void setRepresentation(Representation representation) {
+	public void setRepresentation(Representation representation) throws Exception {
+		if (representation == null)
+			throw new Exception("Representation should not be null");
+
 		_representation = representation;
 	};
 	
